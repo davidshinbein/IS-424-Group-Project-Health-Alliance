@@ -82,90 +82,91 @@
           <h3 class="title is-4">Upcoming Events</h3>
           <div id="publicEvents"></div>
         </section>
-      </div>
-      <!-- Admin Panel -->
-      <div id="adminPanel" class="admin-panel mb-6">
-        <h3 class="title is-5">Admin Panel</h3>
 
-        <!-- Sign in box -->
-        <div id="authBlock" class="mb-4">
-          <div class="columns">
-            <div class="column is-half">
-              <label class="label">Admin Email</label>
-              <input
-                id="email"
-                class="input"
-                type="email"
-                placeholder="admin@example.com"
-              />
-            </div>
-            <div class="column is-half">
-              <label class="label">Password</label>
-              <input
-                id="password"
-                class="input"
-                type="password"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-          <div class="buttons">
-            <button id="signInBtn" class="button is-link is-light">
-              Sign In
-            </button>
-            <button id="signOutBtn" class="button is-danger is-light">
-              Sign Out
-            </button>
-          </div>
-          <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
-        </div>
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel mb-6">
+          <h3 class="title is-5">Admin Panel</h3>
 
-        <!-- Create/Update form (only visible to admins) -->
-        <form id="eventForm" class="mb-5 is-hidden">
-          <input type="hidden" id="eventId" />
-          <div class="columns">
-            <div class="column">
-              <label class="label">Title</label>
-              <input id="title" class="input" required />
+          <!-- Sign in box -->
+          <div id="authBlock" class="mb-4">
+            <div class="columns">
+              <div class="column is-half">
+                <label class="label">Admin Email</label>
+                <input
+                  id="email"
+                  class="input"
+                  type="email"
+                  placeholder="admin@example.com"
+                />
+              </div>
+              <div class="column is-half">
+                <label class="label">Password</label>
+                <input
+                  id="password"
+                  class="input"
+                  type="password"
+                  placeholder="Password"
+                />
+              </div>
             </div>
-            <div class="column">
-              <label class="label">Start (CST)</label>
-              <input
-                id="startAt"
-                class="input"
-                type="datetime-local"
-                required
-              />
+            <div class="buttons">
+              <button id="signInBtn" class="button is-link is-light">
+                Sign In
+              </button>
+              <button id="signOutBtn" class="button is-danger is-light">
+                Sign Out
+              </button>
             </div>
+            <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
           </div>
-          <div class="columns">
-            <div class="column">
-              <label class="label">Location</label>
-              <input id="location" class="input" required />
-            </div>
-            <div class="column">
-              <label class="label">Published</label><br />
-              <label class="checkbox"
-                ><input id="published" type="checkbox" checked /> Visible to
-                public</label
-              >
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Description</label>
-            <textarea id="description" class="textarea" rows="3"></textarea>
-          </div>
-          <div class="buttons">
-            <button class="button is-link" type="submit">Save</button>
-            <button class="button" id="resetBtn" type="button">Reset</button>
-          </div>
-          <p id="formMsg" class="has-text-weight-bold"></p>
-        </form>
 
-        <!-- Admin-only table of all events -->
-        <div id="adminList" class="is-hidden">
-          <h4 class="title is-6">All Events</h4>
-          <div id="adminEvents"></div>
+          <!-- Create/Update form (only visible to admins) -->
+          <form id="eventForm" class="mb-5 is-hidden">
+            <input type="hidden" id="eventId" />
+            <div class="columns">
+              <div class="column">
+                <label class="label">Title</label>
+                <input id="title" class="input" required />
+              </div>
+              <div class="column">
+                <label class="label">Start (CST)</label>
+                <input
+                  id="startAt"
+                  class="input"
+                  type="datetime-local"
+                  required
+                />
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column">
+                <label class="label">Location</label>
+                <input id="location" class="input" required />
+              </div>
+              <div class="column">
+                <label class="label">Published</label><br />
+                <label class="checkbox"
+                  ><input id="published" type="checkbox" checked /> Visible to
+                  public</label
+                >
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Description</label>
+              <textarea id="description" class="textarea" rows="3"></textarea>
+            </div>
+            <div class="buttons">
+              <button class="button is-link" type="submit">Save</button>
+              <button class="button" id="resetBtn" type="button">Reset</button>
+            </div>
+            <p id="formMsg" class="has-text-weight-bold"></p>
+          </form>
+
+          <!-- Admin-only table of all events -->
+          <div id="adminList" class="is-hidden">
+            <h4 class="title is-6">All Events</h4>
+            <div id="adminEvents"></div>
+          </div>
         </div>
       </div>
     </main>
