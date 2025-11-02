@@ -269,8 +269,11 @@
       }
 
       // Auth
-      signInBtn.addEventListener("click", async () => {
-        authMsg.textContent = "";
+      signInBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        authMsg.textContent = "Signing in...";
+        authMsg.classList.remove("has-text-success");
+        authMsg.classList.add("has-text-danger");
         try {
           const email = emailEl.value.trim();
           const pass = passwordEl.value;
@@ -278,17 +281,27 @@
             authMsg.textContent = "Enter email and password";
             return;
           }
-          await signInWithEmailAndPassword(auth, email, pass);
+          console.log("[auth] sign in click", email);
+          const cred = await signInWithEmailAndPassword(auth, email, pass);
+          console.log("[auth] signed in", cred.user.uid);
+          authMsg.classList.remove("has-text-danger");
+          authMsg.classList.add("has-text-success");
+          authMsg.textContent = "Signed in";
         } catch (e) {
-          console.error(e);
-          authMsg.textContent = "Sign in failed";
+          console.error("[auth] error", e);
+          authMsg.textContent = `Sign in failed: ${e.code || e.message}`;
         }
       });
+
       signOutBtn.addEventListener("click", async () => {
         try {
           await signOut(auth);
+          authMsg.classList.remove("has-text-success");
+          authMsg.classList.add("has-text-danger");
+          authMsg.textContent = "Signed out";
         } catch (e) {
-          console.error(e);
+          console.error("[auth] sign out error", e);
+          authMsg.textContent = `Sign out failed: ${e.code || e.message}`;
         }
       });
 
