@@ -70,97 +70,11 @@
     <main class="section" style="background-color: #fff8ea; min-height: 80vh">
       <div class="container is-max-desktop">
         <div class="has-text-centered mb-5">
-          <h2 class="title is-2">Calendar</h2>
+          <h2 class="title is-2">Upcoming Events</h2>
           <p>
             Upcoming events appear below. Admins can sign in to add or edit
             events.
           </p>
-        </div>
-
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="admin-panel mb-6">
-          <h3 class="title is-5">Admin Panel</h3>
-
-          <!-- Sign in box -->
-          <div id="authBlock" class="mb-4">
-            <div class="columns">
-              <div class="column is-half">
-                <label class="label">Admin Email</label>
-                <input
-                  id="email"
-                  class="input"
-                  type="email"
-                  placeholder="admin@example.com"
-                />
-              </div>
-              <div class="column is-half">
-                <label class="label">Password</label>
-                <input
-                  id="password"
-                  class="input"
-                  type="password"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-            <div class="buttons">
-              <button id="signInBtn" class="button is-link is-light">
-                Sign In
-              </button>
-              <button id="signOutBtn" class="button is-danger is-light">
-                Sign Out
-              </button>
-            </div>
-            <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
-          </div>
-
-          <!-- Create/Update form (only visible to admins) -->
-          <form id="eventForm" class="mb-5 is-hidden">
-            <input type="hidden" id="eventId" />
-            <div class="columns">
-              <div class="column">
-                <label class="label">Title</label>
-                <input id="title" class="input" required />
-              </div>
-              <div class="column">
-                <label class="label">Start (CST)</label>
-                <input
-                  id="startAt"
-                  class="input"
-                  type="datetime-local"
-                  required
-                />
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column">
-                <label class="label">Location</label>
-                <input id="location" class="input" required />
-              </div>
-              <div class="column">
-                <label class="label">Published</label><br />
-                <label class="checkbox"
-                  ><input id="published" type="checkbox" checked /> Visible to
-                  public</label
-                >
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Description</label>
-              <textarea id="description" class="textarea" rows="3"></textarea>
-            </div>
-            <div class="buttons">
-              <button class="button is-link" type="submit">Save</button>
-              <button class="button" id="resetBtn" type="button">Reset</button>
-            </div>
-            <p id="formMsg" class="has-text-weight-bold"></p>
-          </form>
-
-          <!-- Admin-only table of all events -->
-          <div id="adminList" class="is-hidden">
-            <h4 class="title is-6">All Events</h4>
-            <div id="adminEvents"></div>
-          </div>
         </div>
 
         <!-- Public list -->
@@ -168,6 +82,91 @@
           <h3 class="title is-4">Upcoming Events</h3>
           <div id="publicEvents"></div>
         </section>
+      </div>
+      <!-- Admin Panel -->
+      <div id="adminPanel" class="admin-panel mb-6">
+        <h3 class="title is-5">Admin Panel</h3>
+
+        <!-- Sign in box -->
+        <div id="authBlock" class="mb-4">
+          <div class="columns">
+            <div class="column is-half">
+              <label class="label">Admin Email</label>
+              <input
+                id="email"
+                class="input"
+                type="email"
+                placeholder="admin@example.com"
+              />
+            </div>
+            <div class="column is-half">
+              <label class="label">Password</label>
+              <input
+                id="password"
+                class="input"
+                type="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <div class="buttons">
+            <button id="signInBtn" class="button is-link is-light">
+              Sign In
+            </button>
+            <button id="signOutBtn" class="button is-danger is-light">
+              Sign Out
+            </button>
+          </div>
+          <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
+        </div>
+
+        <!-- Create/Update form (only visible to admins) -->
+        <form id="eventForm" class="mb-5 is-hidden">
+          <input type="hidden" id="eventId" />
+          <div class="columns">
+            <div class="column">
+              <label class="label">Title</label>
+              <input id="title" class="input" required />
+            </div>
+            <div class="column">
+              <label class="label">Start (CST)</label>
+              <input
+                id="startAt"
+                class="input"
+                type="datetime-local"
+                required
+              />
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column">
+              <label class="label">Location</label>
+              <input id="location" class="input" required />
+            </div>
+            <div class="column">
+              <label class="label">Published</label><br />
+              <label class="checkbox"
+                ><input id="published" type="checkbox" checked /> Visible to
+                public</label
+              >
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <textarea id="description" class="textarea" rows="3"></textarea>
+          </div>
+          <div class="buttons">
+            <button class="button is-link" type="submit">Save</button>
+            <button class="button" id="resetBtn" type="button">Reset</button>
+          </div>
+          <p id="formMsg" class="has-text-weight-bold"></p>
+        </form>
+
+        <!-- Admin-only table of all events -->
+        <div id="adminList" class="is-hidden">
+          <h4 class="title is-6">All Events</h4>
+          <div id="adminEvents"></div>
+        </div>
       </div>
     </main>
 
@@ -335,7 +334,9 @@
             if (!Boolean(ev?.published)) return;
 
             // normalize start time
-            const ts = ev.startAt?.toDate ? ev.startAt.toDate() : new Date(ev.startAt);
+            const ts = ev.startAt?.toDate
+              ? ev.startAt.toDate()
+              : new Date(ev.startAt);
             if (!ts || isNaN(ts.getTime())) return;
             if (ts < now) return;
 
@@ -369,9 +370,9 @@
           adminEvents.innerHTML = "";
           snap.forEach((docSnap) => {
             const ev = docSnap.data();
-          const row = document.createElement("div");
-          row.className = "event-box";
-          row.innerHTML = `
+            const row = document.createElement("div");
+            row.className = "event-box";
+            row.innerHTML = `
             <p class="has-text-weight-bold">${ev.title}</p>
             <p><strong>When:</strong> ${formatCST(ev.startAt)}</p>
             <p><strong>Where:</strong> ${ev.location}</p>
@@ -386,19 +387,20 @@
               }">Delete</button>
             </div>
           `;
-          adminEvents.appendChild(row);
-        });
+            adminEvents.appendChild(row);
+          });
 
-        adminEvents.querySelectorAll("[data-edit]").forEach((btn) => {
-          btn.addEventListener("click", () => loadForEdit(btn.dataset.edit));
-        });
-        adminEvents.querySelectorAll("[data-del]").forEach((btn) => {
-          btn.addEventListener("click", () => doDelete(btn.dataset.del));
-        });
+          adminEvents.querySelectorAll("[data-edit]").forEach((btn) => {
+            btn.addEventListener("click", () => loadForEdit(btn.dataset.edit));
+          });
+          adminEvents.querySelectorAll("[data-del]").forEach((btn) => {
+            btn.addEventListener("click", () => doDelete(btn.dataset.del));
+          });
         },
         (err) => {
           console.error("[adminQ] snapshot error", err);
-          adminEvents.innerHTML = "<p>Unable to load admin events (see console)</p>";
+          adminEvents.innerHTML =
+            "<p>Unable to load admin events (see console)</p>";
         }
       );
 
