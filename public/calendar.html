@@ -320,17 +320,18 @@
       });
 
       // Public list: published only, soonest first, hide past events
-      const pubQ = query(
-        collection(db, "events"),
-        where("published", "==", true),
-        orderBy("startAt", "asc")
-      );
+      // Public list (no composite index needed): order by time, filter client-side
+      const pubQ = query(collection(db, "events"), orderBy("startAt", "asc"));
       onSnapshot(pubQ, (snap) => {
         publicEvents.innerHTML = "";
         const now = new Date();
         snap.forEach((docSnap) => {
           const ev = docSnap.data();
-          if (ev.startAt?.toDate && ev.startAt.toDate() < now) return;
+          const ts = ev.startAt?.toDate
+            ? ev.startAt.toDate()
+            : new Date(ev.startAt);
+          if (!ev.published) return;
+          if (ts < now) return;
           const box = document.createElement("div");
           box.className = "event-box";
           box.innerHTML = `
