@@ -2,40 +2,9 @@
 const r_e = (id) => document.querySelector(`#${id}`);
 
 // === Sign-In Modal Handling ===
+// Sign-in modal removed from global UI; calendar page contains its own auth UI.
 function setupModal() {
-  const signinModal = r_e("signin-modal");
-  const signinLink = r_e("signin-link");
-  const form = r_e("sign_in");
-
-  if (signinLink && signinModal) {
-    signinLink.onclick = () => signinModal.classList.add("is-active");
-  }
-
-  if (signinModal) {
-    const closeModal = () => signinModal.classList.remove("is-active");
-
-    const bg = signinModal.querySelector(".modal-background");
-    const closeBtn = signinModal.querySelector(".modal-close");
-
-    if (bg) bg.onclick = closeModal;
-    if (closeBtn) closeBtn.onclick = closeModal;
-  }
-
-  if (form) {
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      const email = r_e("email_").value;
-      const pass = r_e("password_").value;
-
-      if (email === "test@example.com" && pass === "password") {
-        form.reset();
-        signinModal.classList.remove("is-active");
-        alert(`Welcome back ${email}!`);
-      } else {
-        r_e("signin_error").classList.remove("is-hidden");
-      }
-    };
-  }
+  // no-op: calendar page will manage its own modal and sign-in logic
 }
 
 // === Navbar Handling ===

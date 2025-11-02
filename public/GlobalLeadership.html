@@ -49,7 +49,7 @@
   <a class="navbar-item has-text-white" href="Leadership.html">Meet The Team</a>
     <a class="navbar-item has-text-white" href="#">Calendar</a>
     <a class="navbar-item has-text-white" href="#">Get Involved</a>
-    <a id="signin-link" class="navbar-item has-text-white" href="#">Sign In</a>
+    <!-- Sign In removed; calendar page provides admin auth -->
   </div>
  
 </nav>
@@ -80,35 +80,7 @@
   </main>
 
   <!-- Sign In Modal -->
-<div id="signin-modal" class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content has-text-centered">
-      <div class="box">
-        <form id="sign_in">
-          <h2 class="title is-4 mb-4">Sign In</h2>
-          <div class="field">
-            <p class="control has-icons-left has-icons-right">
-              <input class="input" type="email" placeholder="Email" id="email_"/>
-              <span class="icon is-small is-left"><i class="fa-solid fa-envelope"></i></span>
-            </p>
-          </div>
-          <div class="field">
-            <p class="control has-icons-left">
-              <input class="input" type="password" placeholder="Password" id="password_"/>
-              <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
-            </p>
-          </div>
-          <p id="signin_error" class="is-hidden has-text-weight-bold has-text-danger">
-            email or password are incorrect
-          </p>
-          <div class="buttons is-centered">
-            <button class="button is-link is-light">Sign In</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <button class="modal-close is-large" aria-label="close"></button>
-  </div>
+    <!-- Sign In removed; calendar page provides admin auth -->
   
 
   <!-- Footer -->
@@ -116,43 +88,7 @@
     <p>&copy; 2025 Global Health Alliance UW-Madison</p>
   </footer>
 
-<script>
-    const r_e = (id) => document.querySelector(`#${id}`);
-
-const signinModal = r_e("signin-modal");
-const closeModal = (modal) => modal.classList.remove("is-active");
-
-// open modal when clicking the navbar link
-r_e("signin-link").addEventListener("click", () =>
-  signinModal.classList.add("is-active")
-);
-
-// close modal (background or X button)
-document.querySelectorAll(".modal").forEach((modal) => {
-  modal
-    .querySelector(".modal-background")
-    .addEventListener("click", () => closeModal(modal));
-  modal
-    .querySelector(".modal-close")
-    .addEventListener("click", () => closeModal(modal));
-});
-
-// sign in form submit
-r_e("sign_in").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const email = r_e("email_").value;
-  const pass = r_e("password_").value;
-  auth
-    .signInWithEmailAndPassword(email, pass)
-    .then(() => {
-      r_e("sign_in").reset();
-      signinModal.classList.remove("is-active");
-      configure_messages_bar(`Welcome back ${auth.currentUser.email}!`);
-    })
-    .catch(() => r_e("signin_error").classList.remove("is-hidden"));
-});
-
-</script>
+<!-- Sign in logic removed from GlobalLeadership page -->
 
 
 </body>
