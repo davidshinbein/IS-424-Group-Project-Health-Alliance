@@ -322,34 +322,53 @@
       // Public list: published only, soonest first, hide past events
       // Public list (no composite index needed): order by time, filter client-side
       const pubQ = query(collection(db, "events"), orderBy("startAt", "asc"));
-      onSnapshot(pubQ, (snap) => {
-        publicEvents.innerHTML = "";
-        const now = new Date();
-        snap.forEach((docSnap) => {
-          const ev = docSnap.data();
-          const ts = ev.startAt?.toDate
-            ? ev.startAt.toDate()
-            : new Date(ev.startAt);
-          if (!ev.published) return;
-          if (ts < now) return;
-          const box = document.createElement("div");
-          box.className = "event-box";
-          box.innerHTML = `
+      onSnapshot(
+        pubQ,
+        (snap) => {
+          console.log("[pubQ] snapshot received", snap.size);
+          publicEvents.innerHTML = "";
+          const now = new Date();
+          let count = 0;
+          snap.forEach((docSnap) => {
+            const ev = docSnap.data();
+            // be permissive about published (accept boolean, string 'true', etc.)
+            if (!Boolean(ev?.published)) return;
+
+            // normalize start time
+            const ts = ev.startAt?.toDate ? ev.startAt.toDate() : new Date(ev.startAt);
+            if (!ts || isNaN(ts.getTime())) return;
+            if (ts < now) return;
+
+            const box = document.createElement("div");
+            box.className = "event-box";
+            box.innerHTML = `
             <h4 class="title is-5">${ev.title}</h4>
             <p><strong>When:</strong> ${formatCST(ev.startAt)}</p>
             <p><strong>Where:</strong> ${ev.location}</p>
             ${ev.description ? `<p class="mt-2">${ev.description}</p>` : ""}
           `;
-          publicEvents.appendChild(box);
-        });
-      });
+            publicEvents.appendChild(box);
+            count++;
+          });
+          if (count === 0) {
+            publicEvents.innerHTML = "<p>No upcoming events</p>";
+          }
+        },
+        (err) => {
+          console.error("[pubQ] snapshot error", err);
+          publicEvents.innerHTML = "<p>Unable to load events (see console)</p>";
+        }
+      );
 
       // Admin list: all events, soonest first
       const adminQ = query(collection(db, "events"), orderBy("startAt", "asc"));
-      onSnapshot(adminQ, (snap) => {
-        adminEvents.innerHTML = "";
-        snap.forEach((docSnap) => {
-          const ev = docSnap.data();
+      onSnapshot(
+        adminQ,
+        (snap) => {
+          console.log("[adminQ] snapshot received", snap.size);
+          adminEvents.innerHTML = "";
+          snap.forEach((docSnap) => {
+            const ev = docSnap.data();
           const row = document.createElement("div");
           row.className = "event-box";
           row.innerHTML = `
@@ -376,7 +395,12 @@
         adminEvents.querySelectorAll("[data-del]").forEach((btn) => {
           btn.addEventListener("click", () => doDelete(btn.dataset.del));
         });
-      });
+        },
+        (err) => {
+          console.error("[adminQ] snapshot error", err);
+          adminEvents.innerHTML = "<p>Unable to load admin events (see console)</p>";
+        }
+      );
 
       // Create/Update
       document
