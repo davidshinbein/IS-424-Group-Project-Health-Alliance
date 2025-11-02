@@ -58,8 +58,29 @@ function loadPage(url) {
     .then((html) => {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
-      const newContent = doc.querySelector("main").innerHTML;
-      document.querySelector("main").innerHTML = newContent;
+      const newMain = doc.querySelector("main");
+      const main = document.querySelector("main");
+      main.innerHTML = newMain ? newMain.innerHTML : "";
+
+      // Execute <script> tags from the fetched page so module scripts run.
+      // Skip re-executing this site-wide `main.js` to avoid duplicate bindings.
+      doc.querySelectorAll("script").forEach((old) => {
+        try {
+          if (old.src && old.src.includes("main.js")) return;
+          const script = document.createElement("script");
+          if (old.type) script.type = old.type;
+          if (old.src) {
+            script.src = old.src;
+            // preserve execution order for external scripts
+            script.async = false;
+          } else {
+            script.textContent = old.textContent;
+          }
+          document.body.appendChild(script);
+        } catch (e) {
+          console.error("Error injecting script from fetched page:", e);
+        }
+      });
       window.history.pushState({}, "", url);
       setupNavbar();
       setupModal(); // rebind Sign-In every time
@@ -82,14 +103,14 @@ window.addEventListener("popstate", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const slideshows = document.querySelectorAll(".slideshow");
 
-  slideshows.forEach(slideshow => {
+  slideshows.forEach((slideshow) => {
     const slides = slideshow.querySelectorAll("img");
     const prevBtn = slideshow.querySelector(".prev");
     const nextBtn = slideshow.querySelector(".next");
     let index = 0;
 
     function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove("active"));
+      slides.forEach((slide) => slide.classList.remove("active"));
       slides[n].classList.add("active");
     }
 
