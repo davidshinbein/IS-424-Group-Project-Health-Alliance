@@ -46,7 +46,8 @@ function setupNavbar() {
       if (url && !url.startsWith("#") && !url.startsWith("http")) {
         // Force a full navigation for the calendar page so module scripts run
         if (url.endsWith("calendar.html")) {
-          // allow normal browser navigation which reloads resources
+          // Force a hard navigation so the browser reloads the page and module scripts run
+          window.location.href = url;
           return;
         }
         e.preventDefault();
