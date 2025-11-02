@@ -27,6 +27,16 @@
         border-radius: 12px;
         padding: 16px;
         background: #fff;
+        max-width: 900px; /* constrain width so it doesn't dominate */
+        margin: 0 auto 1.5rem; /* center */
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      }
+      /* make form columns stack on small screens and compress on wide screens */
+      @media (min-width: 1024px) {
+        .admin-panel .columns {
+          max-width: 820px;
+          margin: 0 auto;
+        }
       }
       .is-hidden {
         display: none !important;
