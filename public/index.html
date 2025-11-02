@@ -1,89 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <meta charset="UTF-8" />
+    <title>Global Health Alliance UW-Madison</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <style>
+      html,
+      body {
+        font-family: "Open Sans", sans-serif;
+      }
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.5.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.5.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.5.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+      body {
+        border: 5px solid black;
+      }
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
+      header {
+        background-color: #192d86;
+        border-bottom: 5px solid black;
+      }
+
+      /* Navbar fixes */
+      .navbar,
+      .navbar-menu {
+        background-color: #192d86 !important;
+        justify-content: center;
+      }
+      .navbar-item {
+        color: #fff;
+      }
+      .navbar-item:hover {
+        background-color: transparent !important;
+        color: #fff !important;
+      }
+
+      main {
+        background-color: #fff8ea;
+        min-height: 80vh;
+      }
+
+      .footer {
+        background-color: #192d86;
+        border-top: 5px solid black;
+        color: #fff;
+        width: 100%;
+        padding: 20px;
+      }
+      .footer p {
+        color: #fff;
       }
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <!-- Header -->
+    <header class="has-text-centered p-4">
+      <figure class="image is-64x64 is-inline-block">
+        <img src="Images/ghalogo.png" alt="logo" />
+      </figure>
+      <h1 class="title has-text-white">Global Health Alliance UW-Madison</h1>
+
+      <nav class="navbar">
+        <div class="navbar-menu is-active is-flex is-justify-content-center">
+          <a class="navbar-item has-text-white" href="index.html">Home</a>
+          <a class="navbar-item has-text-white" href="what-we-do.html"
+            >What We Do</a
+          >
+          <a class="navbar-item has-text-white" href="meet-the-team.html"
+            >Meet The Team</a
+          >
+          <a class="navbar-item has-text-white" href="calendar.html"
+            >Calendar</a
+          >
+          <a class="navbar-item has-text-white" href="get-involved.html"
+            >Get Involved</a
+          >
+          <a id="signin-link" class="navbar-item has-text-white" href="#"
+            >Sign In</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main -->
+    <main class="section">
+      <div class="container">
+        <p class="title has-text-centered">
+          Welcome to UW-Madison's Global Health Alliance!
+        </p>
+        <figure class="image" style="max-width: 500px; margin: auto">
+          <img src="Images/GHAGROUPPHOTO.png" alt="group photo" />
+        </figure>
+        <h2 class="title is-3 mt-5 has-text-centered">About Us</h2>
+
+        <div class="columns is-centered">
+          <div class="column is-four-fifths">
+            <div class="content">
+              <p>
+                Global Health Alliance is a group of passionate, intellectually
+                diverse students who come together to learn about global health
+                and engage in local and international partnerships to promote
+                health equity and social justice.
+              </p>
+              <p>
+                This alliance spans across multiple college campuses, including
+                Amherst University, MIT, Tufts University, University of
+                Chicago, University of Michigan, University of Texas-Austin, and
+                UW-Madison.
+              </p>
+              <p>
+                We envision a world of peace and prosperity that promotes
+                equitable health for all people.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sign In Modal -->
+    <div id="signin-modal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content has-text-centered">
+        <div class="box">
+          <form id="sign_in">
+            <h2 class="title is-4 mb-4">Sign In</h2>
+            <div class="field">
+              <p class="control has-icons-left has-icons-right">
+                <input
+                  class="input"
+                  type="email"
+                  placeholder="Email"
+                  id="email_"
+                />
+                <span class="icon is-small is-left"
+                  ><i class="fa-solid fa-envelope"></i
+                ></span>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control has-icons-left">
+                <input
+                  class="input"
+                  type="password"
+                  placeholder="Password"
+                  id="password_"
+                />
+                <span class="icon is-small is-left"
+                  ><i class="fas fa-lock"></i
+                ></span>
+              </p>
+            </div>
+            <p
+              id="signin_error"
+              class="is-hidden has-text-weight-bold has-text-danger"
+            >
+              email or password are incorrect
+            </p>
+            <div class="buttons is-centered">
+              <button class="button is-link is-light">Sign In</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <!-- Footer -->
+    <footer class="footer has-text-centered">
+      <p>&copy; 2025 Global Health Alliance UW-Madison</p>
+    </footer>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>

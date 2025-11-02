@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calendar | Global Health Alliance UW-Madison</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .navbar,
+      .navbar-menu {
+        background-color: #192d86 !important;
+        justify-content: center;
+      }
+      /* light helpers specific to this page */
+      .event-box {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 14px;
+        background: #fff;
+      }
+      .admin-panel {
+        border: 2px solid #192d86;
+        border-radius: 12px;
+        padding: 16px;
+        background: #fff;
+      }
+      .is-hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header
+      class="has-text-centered p-4"
+      style="background-color: #192d86; border-bottom: 5px solid black"
+    >
+      <figure class="image is-64x64 is-inline-block">
+        <img src="Images/ghalogo.png" alt="logo" />
+      </figure>
+      <h1 class="title has-text-white">Global Health Alliance UW-Madison</h1>
+      <nav class="navbar">
+        <div class="navbar-menu is-active is-flex is-justify-content-center">
+          <a class="navbar-item has-text-white" href="index.html">Home</a>
+          <a class="navbar-item has-text-white" href="what-we-do.html"
+            >What We Do</a
+          >
+          <a class="navbar-item has-text-white" href="meet-the-team.html"
+            >Meet The Team</a
+          >
+          <a class="navbar-item has-text-white" href="calendar.html"
+            >Calendar</a
+          >
+          <a class="navbar-item has-text-white" href="get-involved.html"
+            >Get Involved</a
+          >
+          <a id="signin-link" class="navbar-item has-text-white" href="#"
+            >Sign In</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main -->
+    <main class="section" style="background-color: #fff8ea; min-height: 80vh">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered mb-5">
+          <h2 class="title is-2">Calendar</h2>
+          <p>
+            Upcoming events appear below. Admins can sign in to add or edit
+            events.
+          </p>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel mb-6">
+          <h3 class="title is-5">Admin Panel</h3>
+
+          <!-- Sign in box -->
+          <div id="authBlock" class="mb-4">
+            <div class="columns">
+              <div class="column is-half">
+                <label class="label">Admin Email</label>
+                <input
+                  id="email"
+                  class="input"
+                  type="email"
+                  placeholder="admin@example.com"
+                />
+              </div>
+              <div class="column is-half">
+                <label class="label">Password</label>
+                <input
+                  id="password"
+                  class="input"
+                  type="password"
+                  placeholder="Password"
+                />
+              </div>
+            </div>
+            <div class="buttons">
+              <button id="signInBtn" class="button is-link is-light">
+                Sign In
+              </button>
+              <button id="signOutBtn" class="button is-danger is-light">
+                Sign Out
+              </button>
+            </div>
+            <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
+          </div>
+
+          <!-- Create/Update form (only visible to admins) -->
+          <form id="eventForm" class="mb-5 is-hidden">
+            <input type="hidden" id="eventId" />
+            <div class="columns">
+              <div class="column">
+                <label class="label">Title</label>
+                <input id="title" class="input" required />
+              </div>
+              <div class="column">
+                <label class="label">Start (CST)</label>
+                <input
+                  id="startAt"
+                  class="input"
+                  type="datetime-local"
+                  required
+                />
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column">
+                <label class="label">Location</label>
+                <input id="location" class="input" required />
+              </div>
+              <div class="column">
+                <label class="label">Published</label><br />
+                <label class="checkbox"
+                  ><input id="published" type="checkbox" checked /> Visible to
+                  public</label
+                >
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Description</label>
+              <textarea id="description" class="textarea" rows="3"></textarea>
+            </div>
+            <div class="buttons">
+              <button class="button is-link" type="submit">Save</button>
+              <button class="button" id="resetBtn" type="button">Reset</button>
+            </div>
+            <p id="formMsg" class="has-text-weight-bold"></p>
+          </form>
+
+          <!-- Admin-only table of all events -->
+          <div id="adminList" class="is-hidden">
+            <h4 class="title is-6">All Events</h4>
+            <div id="adminEvents"></div>
+          </div>
+        </div>
+
+        <!-- Public list -->
+        <section>
+          <h3 class="title is-4">Upcoming Events</h3>
+          <div id="publicEvents"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="footer has-text-centered"
+      style="
+        background-color: #192d86;
+        border-top: 5px solid black;
+        color: #fff;
+        padding: 20px;
+      "
+    >
+      <p>&copy; 2025 Global Health Alliance UW-Madison</p>
+    </footer>
+
+    <!-- Firebase + page logic -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        where,
+        orderBy,
+        onSnapshot,
+        addDoc,
+        setDoc,
+        doc,
+        deleteDoc,
+        getDoc,
+        serverTimestamp,
+        Timestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+      // TODO: replace with your real config
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
+        authDomain: "is-424-global-health-alliance.firebaseapp.com",
+        projectId: "is-424-global-health-alliance",
+        storageBucket: "is-424-global-health-alliance.firebasestorage.app",
+        messagingSenderId: "174606565995",
+        appId: "1:174606565995:web:5f4a37ae7cfc023eb3a72e",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Elements
+      const eventForm = document.getElementById("eventForm");
+      const adminList = document.getElementById("adminList");
+      const emailEl = document.getElementById("email");
+      const passwordEl = document.getElementById("password");
+      const signInBtn = document.getElementById("signInBtn");
+      const signOutBtn = document.getElementById("signOutBtn");
+      const authMsg = document.getElementById("authMsg");
+      const eventIdEl = document.getElementById("eventId");
+      const titleEl = document.getElementById("title");
+      const startAtEl = document.getElementById("startAt");
+      const locationEl = document.getElementById("location");
+      const descEl = document.getElementById("description");
+      const publishedEl = document.getElementById("published");
+      const formMsg = document.getElementById("formMsg");
+      const resetBtn = document.getElementById("resetBtn");
+      const publicEvents = document.getElementById("publicEvents");
+      const adminEvents = document.getElementById("adminEvents");
+
+      // Helpers
+      async function isAdmin(uid) {
+        if (!uid) return false;
+        // Admins identified by the existence of /admins/{uid}
+        const snap = await getDoc(doc(db, "admins", uid));
+        return snap.exists();
+      }
+      function fromLocalInputToTimestamp(value) {
+        if (!value) return null;
+        // Browser treats datetime-local as local time; Firestore stores UTC
+        const d = new Date(value);
+        return Timestamp.fromDate(d);
+      }
+      function toLocalInputFromTimestamp(ts) {
+        if (!ts) return "";
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(
+          d.getDate()
+        )}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+      function formatCST(ts) {
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleString("en-US", { timeZone: "America/Chicago" });
+      }
+
+      // Auth
+      signInBtn.addEventListener("click", async () => {
+        authMsg.textContent = "";
+        try {
+          const email = emailEl.value.trim();
+          const pass = passwordEl.value;
+          if (!email || !pass) {
+            authMsg.textContent = "Enter email and password";
+            return;
+          }
+          await signInWithEmailAndPassword(auth, email, pass);
+        } catch (e) {
+          console.error(e);
+          authMsg.textContent = "Sign in failed";
+        }
+      });
+      signOutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      onAuthStateChanged(auth, async (user) => {
+        const admin = await isAdmin(user?.uid);
+        if (admin) {
+          eventForm.classList.remove("is-hidden");
+          adminList.classList.remove("is-hidden");
+          authMsg.textContent = `Signed in as admin: ${user.email}`;
+        } else {
+          eventForm.classList.add("is-hidden");
+          adminList.classList.add("is-hidden");
+          if (user) authMsg.textContent = "Not authorized for admin actions";
+          else authMsg.textContent = "";
+        }
+      });
+
+      // Public list: published only, soonest first, hide past events
+      const pubQ = query(
+        collection(db, "events"),
+        where("published", "==", true),
+        orderBy("startAt", "asc")
+      );
+      onSnapshot(pubQ, (snap) => {
+        publicEvents.innerHTML = "";
+        const now = new Date();
+        snap.forEach((docSnap) => {
+          const ev = docSnap.data();
+          if (ev.startAt?.toDate && ev.startAt.toDate() < now) return;
+          const box = document.createElement("div");
+          box.className = "event-box";
+          box.innerHTML = `
+            <h4 class="title is-5">${ev.title}</h4>
+            <p><strong>When:</strong> ${formatCST(ev.startAt)}</p>
+            <p><strong>Where:</strong> ${ev.location}</p>
+            ${ev.description ? `<p class="mt-2">${ev.description}</p>` : ""}
+          `;
+          publicEvents.appendChild(box);
+        });
+      });
+
+      // Admin list: all events, soonest first
+      const adminQ = query(collection(db, "events"), orderBy("startAt", "asc"));
+      onSnapshot(adminQ, (snap) => {
+        adminEvents.innerHTML = "";
+        snap.forEach((docSnap) => {
+          const ev = docSnap.data();
+          const row = document.createElement("div");
+          row.className = "event-box";
+          row.innerHTML = `
+            <p class="has-text-weight-bold">${ev.title}</p>
+            <p><strong>When:</strong> ${formatCST(ev.startAt)}</p>
+            <p><strong>Where:</strong> ${ev.location}</p>
+            <p><strong>Published:</strong> ${ev.published ? "Yes" : "No"}</p>
+            ${ev.description ? `<p>${ev.description}</p>` : ""}
+            <div class="buttons mt-2">
+              <button class="button is-small is-link" data-edit="${
+                docSnap.id
+              }">Edit</button>
+              <button class="button is-small is-danger" data-del="${
+                docSnap.id
+              }">Delete</button>
+            </div>
+          `;
+          adminEvents.appendChild(row);
+        });
+
+        adminEvents.querySelectorAll("[data-edit]").forEach((btn) => {
+          btn.addEventListener("click", () => loadForEdit(btn.dataset.edit));
+        });
+        adminEvents.querySelectorAll("[data-del]").forEach((btn) => {
+          btn.addEventListener("click", () => doDelete(btn.dataset.del));
+        });
+      });
+
+      // Create/Update
+      document
+        .getElementById("eventForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          formMsg.textContent = "";
+
+          const payload = {
+            title: titleEl.value.trim(),
+            startAt: fromLocalInputToTimestamp(startAtEl.value),
+            location: locationEl.value.trim(),
+            description: descEl.value.trim() || "",
+            published: !!publishedEl.checked,
+            updatedAt: serverTimestamp(),
+          };
+          if (!payload.title || !startAtEl.value || !payload.location) {
+            formMsg.textContent = "Please fill title, start time, and location";
+            return;
+          }
+
+          try {
+            const id = eventIdEl.value;
+            if (id) {
+              await setDoc(doc(db, "events", id), payload, { merge: true });
+              formMsg.textContent = "Updated";
+            } else {
+              await addDoc(collection(db, "events"), {
+                ...payload,
+                createdAt: serverTimestamp(),
+              });
+              formMsg.textContent = "Created";
+            }
+            // reset
+            eventIdEl.value = "";
+            titleEl.value = "";
+            startAtEl.value = "";
+            locationEl.value = "";
+            descEl.value = "";
+            publishedEl.checked = true;
+          } catch (e2) {
+            console.error(e2);
+            formMsg.textContent = "Save failed";
+          }
+        });
+
+      // Reset
+      resetBtn.addEventListener("click", () => {
+        eventIdEl.value = "";
+        titleEl.value = "";
+        startAtEl.value = "";
+        locationEl.value = "";
+        descEl.value = "";
+        publishedEl.checked = true;
+        formMsg.textContent = "";
+      });
+
+      // Load for edit
+      async function loadForEdit(id) {
+        const snap = await getDoc(doc(db, "events", id));
+        if (!snap.exists()) return;
+        const ev = snap.data();
+        eventIdEl.value = id;
+        titleEl.value = ev.title || "";
+        startAtEl.value = toLocalInputFromTimestamp(ev.startAt);
+        locationEl.value = ev.location || "";
+        descEl.value = ev.description || "";
+        publishedEl.checked = !!ev.published;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        formMsg.textContent = "Loaded for edit";
+      }
+
+      // Delete
+      async function doDelete(id) {
+        if (!confirm("Delete this event?")) return;
+        try {
+          await deleteDoc(doc(db, "events", id));
+        } catch (e) {
+          console.error(e);
+          alert("Delete failed");
+        }
+      }
+    </script>
+
+    <!-- Keep your site-wide JS if needed; it won’t interfere -->
+    <script src="main.js"></script>
+  </body>
+</html>
