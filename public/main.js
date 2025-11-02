@@ -43,7 +43,9 @@ function loadPage(url) {
         if (url && url.endsWith("calendar.html")) {
           setTimeout(() => {
             const publicEventsEl = document.getElementById("publicEvents");
-            const alreadyReloaded = sessionStorage.getItem("gha_calendar_reloaded");
+            const alreadyReloaded = sessionStorage.getItem(
+              "gha_calendar_reloaded"
+            );
             if (
               (!publicEventsEl || publicEventsEl.children.length === 0) &&
               !alreadyReloaded
