@@ -44,6 +44,11 @@ function setupNavbar() {
     link.addEventListener("click", (e) => {
       const url = link.getAttribute("href");
       if (url && !url.startsWith("#") && !url.startsWith("http")) {
+        // Force a full navigation for the calendar page so module scripts run
+        if (url.endsWith("calendar.html")) {
+          // allow normal browser navigation which reloads resources
+          return;
+        }
         e.preventDefault();
         loadPage(url);
       }
