@@ -60,6 +60,42 @@ function loadPage(url) {
         console.error("calendar auto-reload check failed", e);
       }
 
+      // Inject head styles and links from fetched page so CSS applies on SPA navigation
+      try {
+        const head = document.head;
+        // add <link rel="stylesheet"> from fetched doc if not already present
+        doc.querySelectorAll('link[rel="stylesheet"]').forEach((lnk) => {
+          const href = lnk.getAttribute("href");
+          if (!href) return;
+          if (
+            !Array.from(head.querySelectorAll('link[rel="stylesheet"]')).some(
+              (existing) => existing.getAttribute("href") === href
+            )
+          ) {
+            const newL = document.createElement("link");
+            newL.rel = "stylesheet";
+            newL.href = href;
+            head.appendChild(newL);
+          }
+        });
+        // inject style tags (avoid duplicates by textContent)
+        doc.querySelectorAll("style").forEach((st) => {
+          const txt = st.textContent.trim();
+          if (!txt) return;
+          if (
+            !Array.from(head.querySelectorAll("style")).some(
+              (existing) => existing.textContent.trim() === txt
+            )
+          ) {
+            const newS = document.createElement("style");
+            newS.textContent = txt;
+            head.appendChild(newS);
+          }
+        });
+      } catch (e) {
+        console.error("Error injecting head styles:", e);
+      }
+
       // Execute <script> tags from the fetched page so module scripts run.
       // Skip re-executing this site-wide `main.js` to avoid duplicate bindings.
       doc.querySelectorAll("script").forEach((old) => {
