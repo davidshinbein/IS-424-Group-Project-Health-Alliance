@@ -178,3 +178,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// Capture clicks early and force a hard navigation for leadership/calendar links
+document.addEventListener(
+  "click",
+  (e) => {
+    try {
+      const a = e.target.closest && e.target.closest("a");
+      if (!a) return;
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith("Leadership.html") || href.endsWith("calendar.html")) {
+        // prevent SPA from swallowing the navigation and force a full reload
+        e.preventDefault();
+        // clear any one-shot reload markers so the fresh load behaves normally
+        sessionStorage.removeItem("gha_leadership_reloaded");
+        sessionStorage.removeItem("gha_calendar_reloaded");
+        window.location.href = href;
+      }
+    } catch (err) {
+      console.error("force-navigation handler error", err);
+    }
+  },
+  { capture: true }
+);
