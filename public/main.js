@@ -14,7 +14,7 @@ function setupNavbar() {
       const url = link.getAttribute("href");
       if (url && !url.startsWith("#") && !url.startsWith("http")) {
         // Force a full navigation for the calendar page so module scripts run
-        if (url.endsWith("calendar.html")) {
+        if (url.endsWith("calendar.html") || url.endsWith("Leadership.html")) {
           // Force a hard navigation so the browser reloads the page and module scripts run
           window.location.href = url;
           return;
@@ -55,6 +55,25 @@ function loadPage(url) {
               window.location.reload();
             }
           }, 600);
+        }
+
+        // one-shot auto-reload for Leadership page when injected via SPA
+        try {
+          if (url && url.endsWith("Leadership.html")) {
+            setTimeout(() => {
+              const alreadyReloadedL = sessionStorage.getItem(
+                "gha_leadership_reloaded"
+              );
+              // simple check: ensure at least one leader image exists
+              const anyImg = document.querySelector(".leader-image img");
+              if ((!anyImg || anyImg.naturalWidth === 0) && !alreadyReloadedL) {
+                sessionStorage.setItem("gha_leadership_reloaded", "1");
+                window.location.reload();
+              }
+            }, 600);
+          }
+        } catch (e) {
+          console.error("leadership auto-reload check failed", e);
         }
       } catch (e) {
         console.error("calendar auto-reload check failed", e);
