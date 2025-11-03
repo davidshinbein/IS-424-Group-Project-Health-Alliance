@@ -212,6 +212,19 @@ document.addEventListener(
         sessionStorage.removeItem("gha_leadership_reloaded");
         sessionStorage.removeItem("gha_calendar_reloaded");
         try {
+          // cache-bust the leadership stylesheet so users get the newest CSS
+          try {
+            const head = document.head;
+            const sel = Array.from(head.querySelectorAll('link[rel="stylesheet"]')).find(l => l.getAttribute('href') && l.getAttribute('href').includes('leadership.css'));
+            if (sel) {
+              const base = sel.getAttribute('href').split('?')[0];
+              const busted = base + '?v=' + Date.now();
+              console.log('[force-nav] cache-bust leadership stylesheet ->', busted);
+              sel.setAttribute('href', busted);
+            }
+          } catch (xx) {
+            console.warn('[force-nav] failed to cache-bust leadership stylesheet', xx);
+          }
           const abs = new URL(href, window.location.href).href;
           console.log("[force-nav] redirecting to", abs);
           window.location.href = abs;
