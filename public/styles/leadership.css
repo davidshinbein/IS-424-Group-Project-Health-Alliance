@@ -1,0 +1,123 @@
+/* Extracted leadership page styles */
+html,
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  border: 5px solid black;
+}
+
+header {
+  background-color: #192d86;
+  border-bottom: 5px solid black;
+}
+
+/* Override Bulma's defaults */
+.navbar {
+  background: transparent;
+}
+.navbar-menu {
+  justify-content: center;
+  background: transparent;
+}
+.navbar-item {
+  color: #fff;
+}
+.navbar-item:hover {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+main {
+  background-color: #fff8ea;
+  min-height: 80vh;
+}
+
+/* Override Bulma's defaults */
+.column.text-left {
+  padding-left: 20rem; /* adjust as needed */
+}
+
+.footer {
+  background-color: #192d86;
+  border-top: 5px solid black;
+  color: #fff;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+}
+.footer p {
+  color: #fff;
+}
+
+.leadership-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.leader-row {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+}
+
+.leader-image {
+  flex-shrink: 0;
+  width: 180px;
+}
+
+.leader-image img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.leader-info {
+  flex: 1;
+}
+
+.leader-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #363636;
+  margin-bottom: 0.25rem;
+}
+
+.leader-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+}
+
+.leader-bio {
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+
+/* Reverse layout for alternating rows */
+.leader-row.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .leader-row,
+  .leader-row.reverse {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .leader-image {
+    width: 150px;
+  }
+  .leader-image img {
+    width: 150px;
+    height: 150px;
+  }
+}

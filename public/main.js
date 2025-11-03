@@ -28,6 +28,22 @@ function setupNavbar() {
 
 // === Load Page into <main> ===
 function loadPage(url) {
+  // If leadership or calendar is requested, force a full navigation so
+  // module scripts and page-specific head content load reliably.
+  try {
+    if (
+      url &&
+      (url.endsWith("Leadership.html") || url.endsWith("calendar.html"))
+    ) {
+      // clear one-shot reload markers to ensure fresh load
+      sessionStorage.removeItem("gha_leadership_reloaded");
+      sessionStorage.removeItem("gha_calendar_reloaded");
+      window.location.href = url;
+      return;
+    }
+  } catch (e) {
+    console.error("loadPage navigation guard failed", e);
+  }
   fetch(url)
     .then((res) => res.text())
     .then((html) => {
@@ -191,10 +207,18 @@ document.addEventListener(
       if (href.endsWith("Leadership.html") || href.endsWith("calendar.html")) {
         // prevent SPA from swallowing the navigation and force a full reload
         e.preventDefault();
+        console.log("[force-nav] capture click for", href);
         // clear any one-shot reload markers so the fresh load behaves normally
         sessionStorage.removeItem("gha_leadership_reloaded");
         sessionStorage.removeItem("gha_calendar_reloaded");
-        window.location.href = href;
+        try {
+          const abs = new URL(href, window.location.href).href;
+          console.log("[force-nav] redirecting to", abs);
+          window.location.href = abs;
+        } catch (err) {
+          console.error("[force-nav] invalid href", href, err);
+          window.location.href = href;
+        }
       }
     } catch (err) {
       console.error("force-navigation handler error", err);
