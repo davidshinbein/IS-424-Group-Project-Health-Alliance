@@ -53,6 +53,13 @@ function loadPage(url) {
       const main = document.querySelector("main");
       main.innerHTML = newMain ? newMain.innerHTML : "";
 
+      // initialize any slideshows in the injected content
+      try {
+        initSlideshows();
+      } catch (e) {
+        console.warn('initSlideshows failed after injection', e);
+      }
+
       // If we just injected the calendar page via SPA and it didn't populate
       // (no events), trigger one hard reload so module scripts execute.
       try {
@@ -200,6 +207,15 @@ function initSlideshows() {
         showSlide(index);
       });
     }
+
+    // if there's only one slide, hide navigation controls
+    if (!slides || slides.length <= 1) {
+      if (prevBtn) prevBtn.style.display = 'none';
+      if (nextBtn) nextBtn.style.display = 'none';
+    }
+
+    // show initial slide
+    showSlide(index);
 
     // mark initialized
     slideshow.dataset.slideInit = "1";
