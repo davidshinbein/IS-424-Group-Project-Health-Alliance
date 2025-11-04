@@ -161,6 +161,7 @@ function loadPage(url) {
 document.addEventListener("DOMContentLoaded", () => {
   setupNavbar();
   setupModal();
+  initSlideshows();
 });
 
 // === Handle back/forward ===
@@ -169,31 +170,41 @@ window.addEventListener("popstate", () => {
 });
 
 // === slideshow for the "What We Do" page ===
-document.addEventListener("DOMContentLoaded", () => {
+function initSlideshows() {
   const slideshows = document.querySelectorAll(".slideshow");
 
   slideshows.forEach((slideshow) => {
+    // idempotent init: skip if already initialized
+    if (slideshow.dataset.slideInit === "1") return;
     const slides = slideshow.querySelectorAll("img");
     const prevBtn = slideshow.querySelector(".prev");
     const nextBtn = slideshow.querySelector(".next");
     let index = 0;
 
     function showSlide(n) {
+      if (!slides || slides.length === 0) return;
       slides.forEach((slide) => slide.classList.remove("active"));
       slides[n].classList.add("active");
     }
 
-    prevBtn.addEventListener("click", () => {
-      index = (index - 1 + slides.length) % slides.length;
-      showSlide(index);
-    });
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        index = (index - 1 + slides.length) % slides.length;
+        showSlide(index);
+      });
+    }
 
-    nextBtn.addEventListener("click", () => {
-      index = (index + 1) % slides.length;
-      showSlide(index);
-    });
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        index = (index + 1) % slides.length;
+        showSlide(index);
+      });
+    }
+
+    // mark initialized
+    slideshow.dataset.slideInit = "1";
   });
-});
+}
 
 // Capture clicks early and force a hard navigation for leadership/calendar links
 document.addEventListener(

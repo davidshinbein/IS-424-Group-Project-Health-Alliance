@@ -1,0 +1,38 @@
+/* Header / Navbar / Footer shared styles derived from index.html */
+header.has-text-centered.p-4 {
+  background-color: #192d86;
+  border-bottom: 5px solid black;
+  padding: 1rem 0;
+}
+
+.header figure.image img {
+  max-width: 64px;
+}
+
+.navbar,
+.navbar-menu {
+  background-color: #192d86 !important;
+  justify-content: center;
+}
+.navbar-item {
+  color: #fff;
+}
+.navbar-item:hover {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+.footer {
+  background-color: #192d86;
+  border-top: 5px solid black;
+  color: #fff;
+  padding: 20px;
+}
+.footer p {
+  color: #fff;
+}
+
+main {
+  background-color: #fff8ea;
+  min-height: 80vh;
+}
