@@ -78,3 +78,13 @@ header a:active {
   box-shadow: none !important;
   background: transparent !important;
 }
+
+/* remove button styling from nav items that use Bulma .button */
+.navbar .navbar-item.button,
+.navbar .button,
+.navbar-item.button {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
