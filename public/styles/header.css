@@ -62,3 +62,19 @@ main {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* kill Bulma's active background for nav */
+.navbar-item.is-active,
+.navbar-link.is-active {
+  background-color: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+header a:focus,
+header a:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
