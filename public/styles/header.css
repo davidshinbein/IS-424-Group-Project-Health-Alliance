@@ -15,14 +15,19 @@ header.has-text-centered.p-4 {
   justify-content: center;
 }
 .navbar-item {
-  color: #fff;
+  color: #fff !important;
+  background-color: transparent !important;
+  transition: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 .navbar-item:hover,
 .navbar-item:focus,
-.navbar-item:active {
+.navbar-item:active,
+.navbar-item:visited {
   background-color: transparent !important;
   color: #fff !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 .footer {
@@ -38,23 +43,4 @@ header.has-text-centered.p-4 {
 main {
   background-color: #fff8ea;
   min-height: 80vh;
-}
-
-/* kill focus background/outline on navbar items/links */
-.navbar-item:focus,
-.navbar-item:focus-visible,
-.navbar-item:focus-within,
-.navbar-link:focus,
-.navbar-link:focus-visible,
-.navbar-link:focus-within {
-  background-color: transparent !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-header button:focus,
-header button:focus-visible {
-  outline: none;
-  box-shadow: none;
-  background: transparent;
 }
