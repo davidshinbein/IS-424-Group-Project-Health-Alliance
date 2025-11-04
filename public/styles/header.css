@@ -17,9 +17,12 @@ header.has-text-centered.p-4 {
 .navbar-item {
   color: #fff;
 }
-.navbar-item:hover {
+.navbar-item:hover,
+.navbar-item:focus,
+.navbar-item:active {
   background-color: transparent !important;
   color: #fff !important;
+  outline: none !important;
 }
 
 .footer {
