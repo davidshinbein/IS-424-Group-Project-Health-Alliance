@@ -19,15 +19,22 @@ header.has-text-centered.p-4 {
   background-color: transparent !important;
   transition: none !important;
   -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
 }
 .navbar-item:hover,
 .navbar-item:focus,
 .navbar-item:active,
-.navbar-item:visited {
+.navbar-item:visited,
+.navbar-item[href="#"]:active,
+.navbar-item[href="#"]:focus {
   background-color: transparent !important;
   color: #fff !important;
   outline: none !important;
   box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
 }
 
 .footer {
