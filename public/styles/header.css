@@ -51,4 +51,14 @@ main {
   background-color: #fff8ea;
   min-height: 80vh;
 }
-
+/* kill focus background/outline on navbar items/links */
+.navbar-item:focus,
+.navbar-item:focus-visible,
+.navbar-item:focus-within,
+.navbar-link:focus,
+.navbar-link:focus-visible,
+.navbar-link:focus-within {
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
