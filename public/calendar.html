@@ -26,7 +26,22 @@
         background-color: transparent !important;
         color: #fff !important;
       }
+      .navbar {
+        min-height: 3.25rem;
+        align-items: center;
+      }
+      .navbar-menu {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
+      .navbar-item {
+        padding: 0.5rem 1rem; /* restore Bulma defaults */
+        line-height: 1.5; /* prevent tight line box */
+        letter-spacing: normal; /* undo any carryover */
+        white-space: nowrap; /* avoid awkward wraps */
+      }
       .footer {
         background-color: #192d86;
         border-top: 5px solid black;
