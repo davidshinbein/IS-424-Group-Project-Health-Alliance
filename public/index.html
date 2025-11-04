@@ -87,16 +87,20 @@
   margin: 0 5px; 
 }
 
-.instagram-icon-footer {
-  width: 30px; 
-  height: 30px; 
-  color: #c13584; 
-  transition: color 0.3s ease;
-}
+      .instagram-icon-footer {
+        width: 30px;
+        height: 30px;
+        /* set both color (for currentColor) and explicit stroke as a fallback
+           so other site-wide rules can't accidentally make the icon invisible */
+        color: #c13584;
+        stroke: #c13584;
+        transition: stroke 0.3s ease, color 0.3s ease;
+      }
 
-.instagram-link-footer:hover .instagram-icon-footer {
-  color: #f77737; 
-}
+      .instagram-link-footer:hover .instagram-icon-footer {
+        color: #f77737;
+        stroke: #f77737;
+      }
 </style>
 
 <a href="https://www.instagram.com/ghauwmadison/" target="_blank" class="instagram-link-footer">
