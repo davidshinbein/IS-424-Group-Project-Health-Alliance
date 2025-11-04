@@ -29,6 +29,25 @@ header {
   color: #fff !important;
 }
 
+/* Normalize navbar spacing to avoid per-page drift */
+header .navbar {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+header .navbar-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+header .navbar-item {
+  padding: 0.5rem 1rem;
+  line-height: 1.25;
+}
+
 main {
   background-color: #fff8ea;
   min-height: 80vh;
