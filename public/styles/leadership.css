@@ -1,7 +1,7 @@
 /* Extracted leadership page styles */
 html,
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 body {
@@ -68,6 +68,26 @@ main {
 }
 .footer p {
   color: #fff;
+}
+
+/* Force the site to use the serif heading font everywhere (override other rules) */
+html,
+body,
+header,
+footer,
+nav,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+div,
+li {
+  font-family: Georgia, "Times New Roman", serif !important;
 }
 
 .leadership-section {
