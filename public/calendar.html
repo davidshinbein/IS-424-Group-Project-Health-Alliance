@@ -7,10 +7,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
-  <link rel="stylesheet" href="/styles/leadership.css" />
+    <link rel="stylesheet" href="/styles/leadership.css" />
     <style>
       /* page-local layout rules (no header/navbar overrides) */
-      body { border: 5px solid black; }
+      body {
+        border: 5px solid black;
+      }
 
       /* light helpers specific to this page */
       .event-box {
@@ -31,14 +33,30 @@
       }
       /* make form columns stack on small screens and compress on wide screens */
       @media (min-width: 1024px) {
-        .admin-panel .columns { max-width: 820px; margin: 0 auto; }
+        .admin-panel .columns {
+          max-width: 820px;
+          margin: 0 auto;
+        }
       }
-      .is-hidden { display: none !important; }
-      .footer { background-color: #192d86; border-top: 5px solid black; color: #fff; width: 100%; padding: 20px; }
-      .footer p { color: #fff; }
-      main { background-color: #fff8ea; min-height: 80vh; }
+      .is-hidden {
+        display: none !important;
+      }
+      .footer {
+        background-color: #192d86;
+        border-top: 5px solid black;
+        color: #fff;
+        width: 100%;
+        padding: 20px;
+      }
+      .footer p {
+        color: #fff;
+      }
+      main {
+        background-color: #fff8ea;
+        min-height: 80vh;
+      }
     </style>
-    <base href="/" />
+    <!-- <base href="/" /> -->
   </head>
   <body>
     <!-- Header -->
