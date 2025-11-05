@@ -160,3 +160,39 @@ li {
     height: 150px;
   }
 }
+
+/* ===== Navbar anti-flash ===== */
+
+/* base state for all nav items/links in header */
+.navbar .navbar-item,
+.navbar .navbar-link {
+  background-color: transparent !important;
+  color: #fff !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* kill Bulma's active/focus/pressed background */
+.navbar .navbar-item:active,
+.navbar .navbar-item:focus,
+.navbar .navbar-item:focus-visible,
+.navbar .navbar-item:focus-within,
+.navbar .navbar-item.is-active,
+.navbar .navbar-link:active,
+.navbar .navbar-link:focus,
+.navbar .navbar-link:focus-visible,
+.navbar .navbar-link.is-active {
+  background-color: transparent !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* some pages make the last item a Bulma button; strip that too */
+.navbar .navbar-item.button,
+.navbar .button,
+.navbar-item.button {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
