@@ -9,6 +9,22 @@
     />
     <link rel="stylesheet" href="/styles/leadership.css" />
     <base href="/" />
+    <style>
+      /* Center main body text on the Home Page */
+      main .container .content,
+      main .container p,
+      main .container h2,
+      main .container .title {
+        text-align: center;
+      }
+      /* keep typography responsive */
+      @media (max-width: 480px) {
+        main .container .content,
+        main .container p {
+          font-size: 1rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Header -->
@@ -31,7 +47,7 @@
             >Calendar</a
           >
           <a class="navbar-item has-text-white" href="get-involved.html"
-            >Get Involved</a
+            >Get Involved & Member Requirements</a
           >
           <!-- Sign In removed; calendar page provides admin auth -->
         </div>
@@ -53,20 +69,55 @@
           <div class="column is-four-fifths">
             <div class="content">
               <p>
-                Global Health Alliance is a group of passionate, intellectually
-                diverse students who come together to learn about global health
-                and engage in local and international partnerships to promote
-                health equity and social justice.
+                We are a group of passionate, intellectually diverse students
+                who come together to learn about global health and engage in
+                local and international partnerships to promote health equity
+                and social justice. We focus on improving health equity through
+                student led initiatives of service, fundraising, and education.
+                Our partnerships are both local and international, and focused
+                on being as equitable, sustainable, and involved as possible.
               </p>
+
               <p>
-                This alliance spans across multiple college campuses, including
-                Amherst University, MIT, Tufts University, University of
-                Chicago, University of Michigan, University of Texas-Austin, and
-                UW-Madison.
+                <strong>Forum:</strong><br />
+                Our weekly forums consist of getting together to learn and
+                discuss different Global Health topics. Past examples include
+                health policy, food systems, environmental health, and healthy
+                aging. We also often have guest speakers come in to discuss
+                various topics pertaining to their work and experiences.
               </p>
+
               <p>
-                We envision a world of peace and prosperity that promotes
-                equitable health for all people.
+                <strong>Local Partnership:</strong><br />
+                Our local partnership events consist of volunteering in the
+                UW-Madison and Greater Madison Area. Past groups that we have
+                partnered with include Food Recovery Network, Lakeshore Nature
+                Preserve, and Porchlight.
+              </p>
+
+              <p>
+                <strong>Campaigns (Fundraising):</strong><br />
+                Our campaigns consist of having internal and external
+                fundraisers. Past examples of internal examples include bake
+                sales, tote bag painting, and candy bag sales. For external
+                events, we’ve partnered with Nitty Gritt, Ian’s, and Taggs.
+              </p>
+
+              <p>
+                <strong>Community Building (Social):</strong><br />
+                Our community building events consist of socials, where we meet
+                to build connections within the club. Past events include
+                painting socials, GHA-giving, and campfires at Picnic Point.
+              </p>
+
+              <p>
+                <em>
+                  This alliance spans across multiple college campuses,
+                  including Amherst University, MIT, Tufts University,
+                  University of Chicago, University of Michigan, University of
+                  Texas-Austin, and UW-Madison. We envision a world of peace and
+                  prosperity that promotes equitable health for all people.
+                </em>
               </p>
             </div>
           </div>
@@ -81,31 +132,43 @@
       <p>&copy; 2025 Global Health Alliance UW-Madison</p>
       <p>gha.uwmadison@gmail.com</p>
       <style>
-.instagram-link-footer {
-  display: inline-block;
-  line-height: 0;
-  margin: 0 5px; 
-}
+        .instagram-link-footer {
+          display: inline-block;
+          line-height: 0;
+          margin: 0 5px;
+        }
 
-.instagram-icon-footer {
-  width: 30px; 
-  height: 30px; 
-  color: #c13584; 
-  transition: color 0.3s ease;
-}
+        .instagram-icon-footer {
+          width: 30px;
+          height: 30px;
+          color: #c13584;
+          transition: color 0.3s ease;
+        }
 
-.instagram-link-footer:hover .instagram-icon-footer {
-  color: #f77737; 
-}
-</style>
+        .instagram-link-footer:hover .instagram-icon-footer {
+          color: #f77737;
+        }
+      </style>
 
-<a href="https://www.instagram.com/ghauwmadison/" target="_blank" class="instagram-link-footer">
-  <svg class="instagram-icon-footer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-  </svg>
-</a>
+      <a
+        href="https://www.instagram.com/ghauwmadison/"
+        target="_blank"
+        class="instagram-link-footer"
+      >
+        <svg
+          class="instagram-icon-footer"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
     </footer>
 
     <script src="main.js"></script>

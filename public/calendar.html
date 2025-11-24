@@ -7,10 +7,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
-  <link rel="stylesheet" href="/styles/leadership.css" />
+    <link rel="stylesheet" href="/styles/leadership.css" />
     <style>
       /* page-local layout rules (no header/navbar overrides) */
-      body { border: 5px solid black; }
+      body {
+        border: 5px solid black;
+      }
 
       /* light helpers specific to this page */
       .event-box {
@@ -29,14 +31,34 @@
         margin: 0 auto 1.5rem; /* center */
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
       }
+      .modal-card {
+        max-width: 900px;
+        width: 100%;
+      }
       /* make form columns stack on small screens and compress on wide screens */
       @media (min-width: 1024px) {
-        .admin-panel .columns { max-width: 820px; margin: 0 auto; }
+        .admin-panel .columns {
+          max-width: 820px;
+          margin: 0 auto;
+        }
       }
-      .is-hidden { display: none !important; }
-      .footer { background-color: #192d86; border-top: 5px solid black; color: #fff; width: 100%; padding: 20px; }
-      .footer p { color: #fff; }
-      main { background-color: #fff8ea; min-height: 80vh; }
+      .is-hidden {
+        display: none !important;
+      }
+      .footer {
+        background-color: #192d86;
+        border-top: 5px solid black;
+        color: #fff;
+        width: 100%;
+        padding: 20px;
+      }
+      .footer p {
+        color: #fff;
+      }
+      main {
+        background-color: #fff8ea;
+        min-height: 80vh;
+      }
     </style>
     <base href="/" />
   </head>
@@ -63,7 +85,7 @@
             >Calendar</a
           >
           <a class="navbar-item has-text-white" href="get-involved.html"
-            >Get Involved</a
+            >Get Involved & Member Requirements</a
           >
         </div>
       </nav>
@@ -87,88 +109,123 @@
         </section>
 
         <!-- Admin Panel -->
-        <div id="adminPanel" class="admin-panel mb-6">
-          <h3 class="title is-5">Admin Panel</h3>
+        <!-- Admin login trigger -->
+        <section class="mt-5 mb-4">
+          <button class="button is-link is-light" id="openAdminModal">
+            Admin Login
+          </button>
+          <p class="is-size-7 has-text-grey mt-1">
+            For Global Health Alliance exec/admin use only.
+          </p>
+        </section>
 
-          <!-- Sign in box -->
-          <div id="authBlock" class="mb-4">
-            <div class="columns">
-              <div class="column is-half">
-                <label class="label">Admin Email</label>
-                <input
-                  id="email"
-                  class="input"
-                  type="email"
-                  placeholder="admin@example.com"
-                />
-              </div>
-              <div class="column is-half">
-                <label class="label">Password</label>
-                <input
-                  id="password"
-                  class="input"
-                  type="password"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-            <div class="buttons">
-              <button id="signInBtn" class="button is-link is-light">
-                Sign In
-              </button>
-              <button id="signOutBtn" class="button is-danger is-light">
-                Sign Out
-              </button>
-            </div>
-            <p id="authMsg" class="has-text-danger has-text-weight-bold"></p>
-          </div>
+        <!-- Admin Panel Modal -->
+        <div id="adminModal" class="modal">
+          <div class="modal-background"></div>
 
-          <!-- Create/Update form (only visible to admins) -->
-          <form id="eventForm" class="mb-5 is-hidden">
-            <input type="hidden" id="eventId" />
-            <div class="columns">
-              <div class="column">
-                <label class="label">Title</label>
-                <input id="title" class="input" required />
-              </div>
-              <div class="column">
-                <label class="label">Start (CST)</label>
-                <input
-                  id="startAt"
-                  class="input"
-                  type="datetime-local"
-                  required
-                />
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column">
-                <label class="label">Location</label>
-                <input id="location" class="input" required />
-              </div>
-              <div class="column">
-                <label class="label">Published</label><br />
-                <label class="checkbox"
-                  ><input id="published" type="checkbox" checked /> Visible to
-                  public</label
-                >
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Description</label>
-              <textarea id="description" class="textarea" rows="3"></textarea>
-            </div>
-            <div class="buttons">
-              <button class="button is-link" type="submit">Save</button>
-              <button class="button" id="resetBtn" type="button">Reset</button>
-            </div>
-            <p id="formMsg" class="has-text-weight-bold"></p>
-          </form>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Admin Panel</p>
+              <button
+                class="delete"
+                aria-label="close"
+                id="closeAdminModal"
+              ></button>
+            </header>
 
-          <!-- Admin-only table of all events -->
-          <div id="adminList" class="is-hidden">
-            <h4 class="title is-6">All Events</h4>
-            <div id="adminEvents"></div>
+            <section class="modal-card-body">
+              <div id="adminPanel" class="admin-panel mb-0">
+                <!-- Sign in box -->
+                <div id="authBlock" class="mb-4">
+                  <div class="columns">
+                    <div class="column is-half">
+                      <label class="label">Admin Email</label>
+                      <input
+                        id="email"
+                        class="input"
+                        type="email"
+                        placeholder="admin@example.com"
+                      />
+                    </div>
+                    <div class="column is-half">
+                      <label class="label">Password</label>
+                      <input
+                        id="password"
+                        class="input"
+                        type="password"
+                        placeholder="Password"
+                      />
+                    </div>
+                  </div>
+                  <div class="buttons">
+                    <button id="signInBtn" class="button is-link is-light">
+                      Sign In
+                    </button>
+                    <button id="signOutBtn" class="button is-danger is-light">
+                      Sign Out
+                    </button>
+                  </div>
+                  <p
+                    id="authMsg"
+                    class="has-text-danger has-text-weight-bold"
+                  ></p>
+                </div>
+
+                <!-- Create/Update form (only visible to admins) -->
+                <form id="eventForm" class="mb-5 is-hidden">
+                  <input type="hidden" id="eventId" />
+                  <div class="columns">
+                    <div class="column">
+                      <label class="label">Title</label>
+                      <input id="title" class="input" required />
+                    </div>
+                    <div class="column">
+                      <label class="label">Start (CST)</label>
+                      <input
+                        id="startAt"
+                        class="input"
+                        type="datetime-local"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="columns">
+                    <div class="column">
+                      <label class="label">Location</label>
+                      <input id="location" class="input" required />
+                    </div>
+                    <div class="column">
+                      <label class="label">Published</label><br />
+                      <label class="checkbox">
+                        <input id="published" type="checkbox" checked />
+                        Visible to public
+                      </label>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Description</label>
+                    <textarea
+                      id="description"
+                      class="textarea"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="buttons">
+                    <button class="button is-link" type="submit">Save</button>
+                    <button class="button" id="resetBtn" type="button">
+                      Reset
+                    </button>
+                  </div>
+                  <p id="formMsg" class="has-text-weight-bold"></p>
+                </form>
+
+                <!-- Admin-only table of all events -->
+                <div id="adminList" class="is-hidden">
+                  <h4 class="title is-6">All Events</h4>
+                  <div id="adminEvents"></div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -245,6 +302,32 @@
       const resetBtn = document.getElementById("resetBtn");
       const publicEvents = document.getElementById("publicEvents");
       const adminEvents = document.getElementById("adminEvents");
+      // Modal elements
+      const adminModal = document.getElementById("adminModal");
+      const openAdminModalBtn = document.getElementById("openAdminModal");
+      const closeAdminModalBtn = document.getElementById("closeAdminModal");
+      const adminModalBg =
+        adminModal && adminModal.querySelector(".modal-background");
+
+      function openAdminModal() {
+        if (!adminModal) return;
+        adminModal.classList.add("is-active");
+      }
+
+      function closeAdminModal() {
+        if (!adminModal) return;
+        adminModal.classList.remove("is-active");
+      }
+
+      if (openAdminModalBtn) {
+        openAdminModalBtn.addEventListener("click", openAdminModal);
+      }
+      if (closeAdminModalBtn) {
+        closeAdminModalBtn.addEventListener("click", closeAdminModal);
+      }
+      if (adminModalBg) {
+        adminModalBg.addEventListener("click", closeAdminModal);
+      }
 
       // Helpers
       async function isAdmin(uid) {
@@ -291,6 +374,8 @@
           authMsg.classList.remove("has-text-danger");
           authMsg.classList.add("has-text-success");
           authMsg.textContent = "Signed in";
+          emailEl.value = "";
+          passwordEl.value = "";
         } catch (e) {
           console.error("[auth] error", e);
           authMsg.textContent = `Sign in failed: ${e.code || e.message}`;
@@ -303,6 +388,8 @@
           authMsg.classList.remove("has-text-success");
           authMsg.classList.add("has-text-danger");
           authMsg.textContent = "Signed out";
+          emailEl.value = "";
+          passwordEl.value = "";
         } catch (e) {
           console.error("[auth] sign out error", e);
           authMsg.textContent = `Sign out failed: ${e.code || e.message}`;
@@ -476,8 +563,8 @@
         locationEl.value = ev.location || "";
         descEl.value = ev.description || "";
         publishedEl.checked = !!ev.published;
-        window.scrollTo({ top: 0, behavior: "smooth" });
         formMsg.textContent = "Loaded for edit";
+        openAdminModal(); // make sure modal is visible while editing
       }
 
       // Delete
