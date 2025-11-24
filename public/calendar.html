@@ -374,6 +374,8 @@
           authMsg.classList.remove("has-text-danger");
           authMsg.classList.add("has-text-success");
           authMsg.textContent = "Signed in";
+          emailEl.value = "";
+          passwordEl.value = "";
         } catch (e) {
           console.error("[auth] error", e);
           authMsg.textContent = `Sign in failed: ${e.code || e.message}`;
@@ -386,6 +388,8 @@
           authMsg.classList.remove("has-text-success");
           authMsg.classList.add("has-text-danger");
           authMsg.textContent = "Signed out";
+          emailEl.value = "";
+          passwordEl.value = "";
         } catch (e) {
           console.error("[auth] sign out error", e);
           authMsg.textContent = `Sign out failed: ${e.code || e.message}`;
