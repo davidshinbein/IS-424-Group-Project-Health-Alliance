@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "is-424-global-health-alliance"
-  }
+  },
+  "targets": {
+    "is-424-global-health-alliance": {
+      "hosting": {
+        "prod": [
+          "gha-uwmadison"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
