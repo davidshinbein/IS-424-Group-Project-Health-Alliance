@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Global Health Alliance UW-Madison</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="/styles/leadership.css" />
+    <base href="/" />
+    <style>
+      /* Center main body text on the Home Page */
+      main .container .content,
+      main .container p,
+      main .container h2,
+      main .container .title {
+        text-align: center;
+      }
+      /* keep typography responsive */
+      @media (max-width: 480px) {
+        main .container .content,
+        main .container p {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="has-text-centered p-4">
+      <figure class="image is-64x64 is-inline-block">
+        <img src="/images/ghalogo.png" alt="logo" />
+      </figure>
+      <h1 class="title has-text-white">Global Health Alliance UW-Madison</h1>
+
+      <nav class="navbar">
+        <div class="navbar-menu is-active is-flex is-justify-content-center">
+          <a class="navbar-item has-text-white" href="index.html">Home</a>
+          <a class="navbar-item has-text-white" href="what-we-do.html"
+            >What We Do</a
+          >
+          <a class="navbar-item has-text-white" href="Leadership.html"
+            >Meet The Team</a
+          >
+          <a class="navbar-item has-text-white" href="calendar.html"
+            >Calendar</a
+          >
+          <a class="navbar-item has-text-white" href="get-involved.html"
+            >Get Involved & Member Requirements</a
+          >
+          <a class="navbar-item has-text-white" href="globalpartners.html"
+            >Global Partners</a
+          >
+          <!-- Sign In removed; calendar page provides admin auth -->
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main -->
+    <main class="section">
+      <div class="container">
+        <p class="title has-text-centered">
+          Welcome to UW-Madison's Global Health Alliance!
+        </p>
+        <figure class="image" style="max-width: 500px; margin: auto">
+          <img src="/images/GHAGROUPPHOTO.png" alt="group photo" />
+        </figure>
+        <h2 class="title is-3 mt-5 has-text-centered">About Us</h2>
+
+        <div class="columns is-centered">
+          <div class="column is-four-fifths">
+            <div class="content">
+              <p>
+                <em>
+                  This alliance spans across multiple college campuses,
+                  including Amherst University, MIT, Tufts University,
+                  University of Chicago, University of Michigan, University of
+                  Texas-Austin, and UW-Madison. We envision a world of peace and
+                  prosperity that promotes equitable health for all people.
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sign In removed; calendar page provides admin auth -->
+
+    <!-- Footer -->
+    <footer class="footer has-text-centered">
+      <p>&copy; 2025 Global Health Alliance UW-Madison</p>
+      <p>gha.uwmadison@gmail.com</p>
+      <style>
+        .instagram-link-footer {
+          display: inline-block;
+          line-height: 0;
+          margin: 0 5px;
+        }
+
+        .instagram-icon-footer {
+          width: 30px;
+          height: 30px;
+          color: #c13584;
+          transition: color 0.3s ease;
+        }
+
+        .instagram-link-footer:hover .instagram-icon-footer {
+          color: #f77737;
+        }
+      </style>
+
+      <a
+        href="https://www.instagram.com/ghauwmadison/"
+        target="_blank"
+        class="instagram-link-footer"
+      >
+        <svg
+          class="instagram-icon-footer"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>
