@@ -22,11 +22,9 @@ header.has-text-centered.p-4 {
   user-select: none !important;
 }
 .navbar-item:hover,
-.navbar-item:focus,
 .navbar-item:active,
 .navbar-item:visited,
-.navbar-item[href="#"]:active,
-.navbar-item[href="#"]:focus {
+.navbar-item[href="#"]:active {
   background-color: transparent !important;
   color: #fff !important;
   outline: none !important;
@@ -51,16 +49,23 @@ main {
   background-color: #fff8ea;
   min-height: 80vh;
 }
-/* kill focus background/outline on navbar items/links */
+/* Accessible focus: show a visible ring for keyboard users (focus-visible) */
 .navbar-item:focus,
-.navbar-item:focus-visible,
-.navbar-item:focus-within,
-.navbar-link:focus,
-.navbar-link:focus-visible,
-.navbar-link:focus-within {
-  background-color: transparent !important;
+.navbar-link:focus {
+  /* hide the browser default focus ring for mouse clicks */
   outline: none !important;
   box-shadow: none !important;
+}
+
+.navbar-item:focus-visible,
+.navbar-link:focus-visible,
+header a:focus-visible {
+  /* visible, high-contrast focus ring for keyboard users */
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.28) !important;
+  border-radius: 6px !important;
+  outline: none !important;
 }
 
 /* kill Bulma's active background for nav */
@@ -74,6 +79,7 @@ main {
 
 header a:focus,
 header a:active {
+  /* keep mouse/active styles transparent while still allowing keyboard focus-visible */
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
