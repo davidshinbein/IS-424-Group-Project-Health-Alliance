@@ -266,3 +266,76 @@ document.addEventListener(
   },
   { capture: true }
 );
+
+// === Contact form handling ===
+document.addEventListener("submit", async (e) => {
+  try {
+    const form = e.target;
+    if (!form || form.id !== "contactForm") return;
+    e.preventDefault();
+
+    const name = (form.querySelector("#contactName") || {}).value || "";
+    const email = (form.querySelector("#contactEmail") || {}).value || "";
+    const message = (form.querySelector("#contactMessage") || {}).value || "";
+    const feedback = document.getElementById("contactFeedback");
+    const submitBtn = document.getElementById("contactSubmit");
+
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      if (feedback) feedback.textContent = "Please fill out all fields.";
+      return;
+    }
+
+    // disable the button while creating the JSON
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add("is-loading");
+    }
+
+    feedback.textContent = "Preparing JSON…";
+
+    const payload = { name: name.trim(), email: email.trim(), message: message.trim(), timestamp: new Date().toISOString() };
+
+    // Create a downloadable JSON file for the user (static-only mode)
+    try {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contact-message.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      feedback.textContent = 'JSON prepared — the browser downloaded a file with the message. (No server is connected.)';
+      form.reset();
+    } catch (xx) {
+      console.error('prepare json error', xx);
+      feedback.textContent = 'Unable to prepare JSON file in this browser.';
+    }
+  } catch (err) {
+    console.error("contact submit error", err);
+    const feedback = document.getElementById("contactFeedback");
+    if (feedback) feedback.textContent = "An error occurred sending the message.";
+  } finally {
+    const submitBtn = document.getElementById("contactSubmit");
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("is-loading");
+    }
+  }
+});
+
+// Reset handler (optional)
+document.addEventListener("click", (e) => {
+  try {
+    const btn = e.target.closest && e.target.closest("#contactReset");
+    if (!btn) return;
+    const form = document.getElementById("contactForm");
+    if (form) form.reset();
+    const feedback = document.getElementById("contactFeedback");
+    if (feedback) feedback.textContent = "";
+  } catch (err) {
+    /* ignore */
+  }
+});

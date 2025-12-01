@@ -9,6 +9,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
+            
     <link rel="stylesheet" href="/styles/leadership.css" />
     <style>
       .body {
@@ -78,6 +79,44 @@
             >
               Connect With Us At gha.uwmadison@gmail.com
             </h2>
+            <!-- Contact form: name, email, comment -->
+            <div class="section" style="margin-top: 1.25rem">
+              <div class="container is-max-desktop">
+                <form id="contactForm" class="box" aria-label="Contact form">
+                  <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                      <input class="input" type="text" name="name" id="contactName" placeholder="Your name" required />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                      <input class="input" type="email" name="email" id="contactEmail" placeholder="you@example.com" required />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Comment</label>
+                    <div class="control">
+                      <textarea class="textarea" name="message" id="contactMessage" rows="5" placeholder="Tell us what you'd like to share" required></textarea>
+                    </div>
+                  </div>
+
+                  <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                      <button type="submit" class="button is-link" id="contactSubmit">Send Message</button>
+                    </div>
+                    <div class="control">
+                      <button type="button" class="button is-light" id="contactReset">Reset</button>
+                    </div>
+                  </div>
+
+                  <div id="contactFeedback" role="status" aria-live="polite" style="margin-top: .75rem"></div>
+                </form>
+              </div>
+            </div>
           </div>
         </section>
         <!-- End of Section -->
