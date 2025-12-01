@@ -57,7 +57,7 @@ function loadPage(url) {
       try {
         initSlideshows();
       } catch (e) {
-        console.warn('initSlideshows failed after injection', e);
+        console.warn("initSlideshows failed after injection", e);
       }
 
       // If we just injected the calendar page via SPA and it didn't populate
@@ -210,8 +210,8 @@ function initSlideshows() {
 
     // if there's only one slide, hide navigation controls
     if (!slides || slides.length <= 1) {
-      if (prevBtn) prevBtn.style.display = 'none';
-      if (nextBtn) nextBtn.style.display = 'none';
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
     }
 
     // show initial slide
@@ -242,15 +242,27 @@ document.addEventListener(
           // cache-bust the leadership stylesheet so users get the newest CSS
           try {
             const head = document.head;
-            const sel = Array.from(head.querySelectorAll('link[rel="stylesheet"]')).find(l => l.getAttribute('href') && l.getAttribute('href').includes('leadership.css'));
+            const sel = Array.from(
+              head.querySelectorAll('link[rel="stylesheet"]')
+            ).find(
+              (l) =>
+                l.getAttribute("href") &&
+                l.getAttribute("href").includes("leadership.css")
+            );
             if (sel) {
-              const base = sel.getAttribute('href').split('?')[0];
-              const busted = base + '?v=' + Date.now();
-              console.log('[force-nav] cache-bust leadership stylesheet ->', busted);
-              sel.setAttribute('href', busted);
+              const base = sel.getAttribute("href").split("?")[0];
+              const busted = base + "?v=" + Date.now();
+              console.log(
+                "[force-nav] cache-bust leadership stylesheet ->",
+                busted
+              );
+              sel.setAttribute("href", busted);
             }
           } catch (xx) {
-            console.warn('[force-nav] failed to cache-bust leadership stylesheet', xx);
+            console.warn(
+              "[force-nav] failed to cache-bust leadership stylesheet",
+              xx
+            );
           }
           const abs = new URL(href, window.location.href).href;
           console.log("[force-nav] redirecting to", abs);
@@ -293,30 +305,39 @@ document.addEventListener("submit", async (e) => {
 
     feedback.textContent = "Preparing JSON…";
 
-    const payload = { name: name.trim(), email: email.trim(), message: message.trim(), timestamp: new Date().toISOString() };
+    const payload = {
+      name: name.trim(),
+      email: email.trim(),
+      message: message.trim(),
+      timestamp: new Date().toISOString(),
+    };
 
     // Create a downloadable JSON file for the user (static-only mode)
     try {
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'contact-message.json';
+      a.download = "contact-message.json";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
 
-      feedback.textContent = 'JSON prepared — the browser downloaded a file with the message. (No server is connected.)';
+      feedback.textContent =
+        "JSON prepared — the browser downloaded a file with the message. (No server is connected.)";
       form.reset();
     } catch (xx) {
-      console.error('prepare json error', xx);
-      feedback.textContent = 'Unable to prepare JSON file in this browser.';
+      console.error("prepare json error", xx);
+      feedback.textContent = "Unable to prepare JSON file in this browser.";
     }
   } catch (err) {
     console.error("contact submit error", err);
     const feedback = document.getElementById("contactFeedback");
-    if (feedback) feedback.textContent = "An error occurred sending the message.";
+    if (feedback)
+      feedback.textContent = "An error occurred sending the message.";
   } finally {
     const submitBtn = document.getElementById("contactSubmit");
     if (submitBtn) {
