@@ -65,6 +65,21 @@
       .leader-bio {
         line-height: 1.6;
       }
+      .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 10px;
+        border-radius: 8px;
+        display: none;
+      }
+      .image-preview.show {
+        display: block;
+      }
+      .file-name {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #666;
+      }
     </style>
     <base href="/" />
   </head>
@@ -178,36 +193,73 @@
                   <!-- Profile create/update form (admins only) -->
                   <form id="leaderForm" class="mb-5 is-hidden">
                     <input type="hidden" id="leaderId" />
-                    <div class="columns">
-                      <div class="column">
-                        <label class="label">Full Name</label>
-                        <input id="leaderName" class="input" required />
-                      </div>
-                      <div class="column">
-                        <label class="label">Title</label>
-                        <input id="leaderTitle" class="input" required />
-                      </div>
-                    </div>
+
                     <div class="field">
-                      <label class="label">Image URL</label>
+                      <label class="label">Full Name *</label>
                       <input
-                        id="leaderImage"
+                        id="leaderName"
                         class="input"
-                        placeholder="/images/NAME.png"
+                        required
+                        placeholder="e.g., Tola Klabough"
                       />
-                      <p class="help">Enter the path to the profile image</p>
                     </div>
+
                     <div class="field">
-                      <label class="label">Bio</label>
+                      <label class="label">Position/Title *</label>
+                      <input
+                        id="leaderTitle"
+                        class="input"
+                        required
+                        placeholder="e.g., Co-President"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Profile Photo *</label>
+                      <div class="file has-name is-fullwidth">
+                        <label class="file-label">
+                          <input
+                            class="file-input"
+                            type="file"
+                            id="leaderImageFile"
+                            accept="image/*"
+                          />
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i>📷</i>
+                            </span>
+                            <span class="file-label"> Choose a photo… </span>
+                          </span>
+                          <span class="file-name" id="fileName"
+                            >No file selected</span
+                          >
+                        </label>
+                      </div>
+                      <p class="help">
+                        Upload a photo (JPG, PNG, etc.). Recommended: square
+                        image, at least 400x400px
+                      </p>
+                      <img
+                        id="imagePreview"
+                        class="image-preview"
+                        alt="Preview"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Bio *</label>
                       <textarea
                         id="leaderBio"
                         class="textarea"
-                        rows="5"
+                        rows="6"
+                        required
+                        placeholder="Tell us about yourself, your studies, involvement, and future goals..."
                       ></textarea>
                     </div>
+
                     <div class="buttons">
-                      <button class="button is-link" type="submit">
-                        Save Profile
+                      <button class="button is-link" type="submit" id="saveBtn">
+                        <span id="saveBtnText">Save Profile</span>
                       </button>
                       <button
                         class="button is-light"
@@ -261,6 +313,12 @@
         deleteDoc,
         serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
@@ -274,6 +332,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
+      const storage = getStorage(app);
 
       // Elements
       const leaderList = document.getElementById("leaderList");
@@ -295,12 +354,33 @@
       const leaderIdEl = document.getElementById("leaderId");
       const leaderNameEl = document.getElementById("leaderName");
       const leaderTitleEl = document.getElementById("leaderTitle");
-      const leaderImageEl = document.getElementById("leaderImage");
+      const leaderImageFileEl = document.getElementById("leaderImageFile");
       const leaderBioEl = document.getElementById("leaderBio");
       const leadFormMsg = document.getElementById("leadFormMsg");
       const leadResetBtn = document.getElementById("leadResetBtn");
       const leadAdminList = document.getElementById("leadAdminList");
       const allLeaders = document.getElementById("allLeaders");
+      const imagePreview = document.getElementById("imagePreview");
+      const fileName = document.getElementById("fileName");
+      const saveBtn = document.getElementById("saveBtn");
+      const saveBtnText = document.getElementById("saveBtnText");
+
+      // Image preview
+      leaderImageFileEl.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          fileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            imagePreview.classList.add("show");
+          };
+          reader.readAsDataURL(file);
+        } else {
+          fileName.textContent = "No file selected";
+          imagePreview.classList.remove("show");
+        }
+      });
 
       // Modal controls
       function openModal() {
@@ -314,7 +394,7 @@
       closeLeadAdminModalBtn?.addEventListener("click", closeModal);
       leadModalBg?.addEventListener("click", closeModal);
 
-      // Check if user is admin (same as events page)
+      // Check if user is admin
       async function isAdmin(uid) {
         if (!uid) return false;
         try {
@@ -326,7 +406,7 @@
         }
       }
 
-      // Public list of leaders (order by name)
+      // Public list of leaders
       const pubQ = query(collection(db, "leaders"), orderBy("name", "asc"));
       onSnapshot(
         pubQ,
@@ -343,7 +423,7 @@
             const ld = s.data();
             const row = document.createElement("div");
             row.className = `leader-row ${isReverse ? "reverse" : ""}`;
-            const imgSrc = ld.image || "/images/placeholder.png";
+            const imgSrc = ld.imageUrl || "/images/placeholder.png";
 
             row.innerHTML = `
               <div class="leader-image">
@@ -420,7 +500,7 @@
         }
       );
 
-      // Sign in (same as events page)
+      // Sign in
       leadSignInBtn.addEventListener("click", async (e) => {
         e.preventDefault();
         leadAuthMsg.textContent = "Signing in...";
@@ -436,15 +516,13 @@
             return;
           }
 
-          console.log("[auth] sign in click", email);
-          const cred = await signInWithEmailAndPassword(auth, email, pass);
-          console.log("[auth] signed in", cred.user.uid);
+          await signInWithEmailAndPassword(auth, email, pass);
           leadAuthMsg.className = "has-text-success has-text-weight-bold mt-2";
           leadAuthMsg.textContent = "Signed in";
           leadEmail.value = "";
           leadPassword.value = "";
         } catch (err) {
-          console.error("[auth] error", err);
+          console.error("Sign in error:", err);
           leadAuthMsg.textContent = `Sign in failed: ${
             err.code || err.message
           }`;
@@ -452,7 +530,7 @@
         }
       });
 
-      // Sign out (same as events page)
+      // Sign out
       leadSignOutBtn.addEventListener("click", async () => {
         try {
           await signOut(auth);
@@ -461,13 +539,13 @@
           leadEmail.value = "";
           leadPassword.value = "";
         } catch (e) {
-          console.error("[auth] sign out error", e);
-          leadAuthMsg.textContent = `Sign out failed: ${e.code || e.message}`;
+          console.error("Sign out error:", e);
+          leadAuthMsg.textContent = `Sign out failed`;
           leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
         }
       });
 
-      // Auth state changes (same pattern as events page)
+      // Auth state changes
       onAuthStateChanged(auth, async (user) => {
         const admin = await isAdmin(user?.uid);
         if (admin) {
@@ -487,57 +565,96 @@
         }
       });
 
-      // Save profile (same pattern as events save)
+      // Save profile with image upload
       leaderForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         leadFormMsg.textContent = "";
 
-        const id = leaderIdEl.value?.trim();
-        const payload = {
-          name: leaderNameEl.value.trim(),
-          title: leaderTitleEl.value.trim(),
-          image: leaderImageEl.value.trim() || "",
-          bio: leaderBioEl.value.trim() || "",
-          updatedAt: serverTimestamp(),
-        };
+        const name = leaderNameEl.value.trim();
+        const title = leaderTitleEl.value.trim();
+        const bio = leaderBioEl.value.trim();
+        const imageFile = leaderImageFileEl.files[0];
+        const existingId = leaderIdEl.value?.trim();
 
-        if (!payload.name || !payload.title) {
-          leadFormMsg.textContent = "Please provide name and title";
+        if (!name || !title || !bio) {
+          leadFormMsg.textContent = "Please fill in name, title, and bio";
           leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
           return;
         }
 
+        // Disable button and show loading
+        saveBtn.disabled = true;
+        saveBtnText.textContent = "Saving...";
+
         try {
-          if (id && id.length > 0) {
+          let imageUrl = "";
+
+          // Upload image if provided
+          if (imageFile) {
+            saveBtnText.textContent = "Uploading photo...";
+            const timestamp = Date.now();
+            const imagePath = `leaders/${timestamp}_${imageFile.name}`;
+            const imageRef = ref(storage, imagePath);
+            await uploadBytes(imageRef, imageFile);
+            imageUrl = await getDownloadURL(imageRef);
+          } else if (existingId) {
+            // If editing and no new image, keep existing image
+            const existingDoc = await getDoc(doc(db, "leaders", existingId));
+            if (existingDoc.exists()) {
+              imageUrl = existingDoc.data().imageUrl || "";
+            }
+          }
+
+          if (!imageUrl && !existingId) {
+            leadFormMsg.textContent = "Please upload a photo";
+            leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
+            saveBtn.disabled = false;
+            saveBtnText.textContent = "Save Profile";
+            return;
+          }
+
+          saveBtnText.textContent = "Saving profile...";
+
+          const payload = {
+            name,
+            title,
+            bio,
+            imageUrl,
+            updatedAt: serverTimestamp(),
+          };
+
+          if (existingId && existingId.length > 0) {
             // Update existing profile
-            console.log("Updating existing profile:", id);
-            await setDoc(doc(db, "leaders", id), payload, { merge: true });
+            await setDoc(doc(db, "leaders", existingId), payload, {
+              merge: true,
+            });
             leadFormMsg.textContent = "Profile updated successfully!";
-            leadFormMsg.className =
-              "has-text-success has-text-weight-bold mt-2";
           } else {
-            // Create new profile with auto-generated ID
-            console.log("Creating new profile");
-            const docRef = await addDoc(collection(db, "leaders"), {
+            // Create new profile
+            await addDoc(collection(db, "leaders"), {
               ...payload,
               createdAt: serverTimestamp(),
             });
-            console.log("New profile created with ID:", docRef.id);
             leadFormMsg.textContent = "Profile created successfully!";
-            leadFormMsg.className =
-              "has-text-success has-text-weight-bold mt-2";
           }
 
-          // Reset form after successful save
+          leadFormMsg.className = "has-text-success has-text-weight-bold mt-2";
+
+          // Reset form
           leaderIdEl.value = "";
           leaderNameEl.value = "";
           leaderTitleEl.value = "";
-          leaderImageEl.value = "";
           leaderBioEl.value = "";
+          leaderImageFileEl.value = "";
+          fileName.textContent = "No file selected";
+          imagePreview.classList.remove("show");
         } catch (err) {
           console.error("Save error:", err);
           leadFormMsg.textContent = `Save failed: ${err.message}`;
           leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
+        } finally {
+          saveBtn.disabled = false;
+          saveBtnText.textContent = "Save Profile";
         }
       });
 
@@ -546,12 +663,14 @@
         leaderIdEl.value = "";
         leaderNameEl.value = "";
         leaderTitleEl.value = "";
-        leaderImageEl.value = "";
         leaderBioEl.value = "";
+        leaderImageFileEl.value = "";
+        fileName.textContent = "No file selected";
+        imagePreview.classList.remove("show");
         leadFormMsg.textContent = "";
       });
 
-      // Load for edit (same as events)
+      // Load for edit
       async function loadForEdit(id) {
         const snap = await getDoc(doc(db, "leaders", id));
         if (!snap.exists()) return;
@@ -559,21 +678,32 @@
         leaderIdEl.value = snap.id;
         leaderNameEl.value = ld.name || "";
         leaderTitleEl.value = ld.title || "";
-        leaderImageEl.value = ld.image || "";
         leaderBioEl.value = ld.bio || "";
-        leadFormMsg.textContent = "Loaded for edit";
+
+        // Show existing image preview
+        if (ld.imageUrl) {
+          imagePreview.src = ld.imageUrl;
+          imagePreview.classList.add("show");
+          fileName.textContent = "Current image (upload new to replace)";
+        }
+
+        leadFormMsg.textContent =
+          "Loaded for edit - you can upload a new photo or keep the existing one";
         leadFormMsg.className = "has-text-info has-text-weight-bold mt-2";
         openModal();
+        leaderForm.scrollIntoView({ behavior: "smooth" });
       }
 
-      // Delete (same as events)
+      // Delete
       async function doDelete(id) {
-        if (!confirm("Delete this profile?")) return;
+        if (!confirm("Delete this profile? This cannot be undone.")) return;
         try {
           await deleteDoc(doc(db, "leaders", id));
+          leadFormMsg.textContent = "Profile deleted";
+          leadFormMsg.className = "has-text-success has-text-weight-bold mt-2";
         } catch (e) {
-          console.error("delete leader", e);
-          alert("Delete failed");
+          console.error("Delete error:", e);
+          alert("Delete failed: " + e.message);
         }
       }
     </script>
