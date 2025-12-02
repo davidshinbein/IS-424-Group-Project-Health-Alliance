@@ -37,150 +37,84 @@
     <!-- Main -->
 <main class="section p-0">
       <section class="section">
-        <div class="leadership-section">
+          <div class="leadership-section">
           <h1 class="title has-text-centered mb-6">
             2025-2026 Leadership Team
           </h1>
 
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/TOLA.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Tola Klabough</div>
-              <div class="leader-title">Co-President</div>
-              <p class="leader-bio">
-                Hi! My name is Tola and I’m a senior studying Global Health and
-               Political Science, with certificates in Health Policy and
-                Environmental Studies. Outside of GHA, I am an Undergraduate
-                Research Assistant with the Climate Solutions for Health Lab,
-                which is run by Dr. Jonathan Patz! I also work as a Student Lead
-                at the SubZero Ice Center located in the Bakke. After
-                graduation, I hope to combine my passions for climate advocacy
-                and health policy. Outside of school and work, I enjoy doing
-                yoga and baking!
-              </p>
-            </div>
-          </div>
+          <!-- Dynamic leader list (populated from Firestore) -->
+          <div id="leaderList"></div>
 
-          <div class="leader-row reverse">
-            <div class="leader-image">
-              <img src="/images/MORGAN.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Morgan Ramsey</div>
-              <div class="leader-title">Co-President</div>
-              <p class="leader-bio">Hi! My name is Morgan and I’m a senior studying Global Health and Life Sciences Communication, with certificates in Digital Studies, Digital Media Analytics, and Sustainability. Outside of GHA, I am a Communications & Multimedia Intern for the Wisconsin Institute for Discovery, an Outreach & Events Assistant for the Wisconsin Science Festival, a Communications Assistant for the La Follette School of Public Affairs, and a Communications Intern for Slow Food UW. After graduation, I plan to become a Communications or Marketing Specialist, hopefully staying within the science and health realm. Outside of school and work, I enjoy going for runs, writing letters to pen pals, and spending time with friends and family!
+          <!-- Admin controls: allow admins or the member themselves to edit -->
+          <section class="mt-5 mb-4">
+            <button class="button is-link is-light" id="openLeadAdminModal">Admin / Profile Login</button>
+            <p class="is-size-7 has-text-grey mt-1">Admins can edit any profile; individual members can sign in and edit their own profile (doc id = uid).</p>
+          </section>
 
-</p>
-            </div>
-          </div>
+          <!-- Admin / Profile Modal -->
+          <div id="leadAdminModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Manage Profiles</p>
+                <button class="delete" aria-label="close" id="closeLeadAdminModal"></button>
+              </header>
 
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/SARAH.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Sarah Koker</div>
-              <div class="leader-title">Local Partnership Co-Director</div>
-              <p class="leader-bio">My name is Sarah and I'm a Junior studying Nutritional Sciences with certificates in Global Health, Health Policy, and Science Communication. Outside of school I volunteer at a kids fitness clinic that focuses on improving the metabolic health of kids dealing with type 2 diabetes, obesity, and other endocrine diseases. For work I am a CNA on the respiratory floor at St. Mary’s and have an internship with WCMEW working on research in workforce development within healthcare. I hope to go to medical school after graduation and become an Endocrinologist. In my free time I play a lot of intramural sports and love going for a long run.</p>
-            </div>
-          </div>
+              <section class="modal-card-body">
+                <div id="leadAdminPanel" class="admin-panel mb-0">
+                  <div id="leadAuthBlock" class="mb-4">
+                    <div class="columns">
+                      <div class="column is-half">
+                        <label class="label">Email</label>
+                        <input id="leadEmail" class="input" type="email" placeholder="member@example.com" />
+                      </div>
+                      <div class="column is-half">
+                        <label class="label">Password</label>
+                        <input id="leadPassword" class="input" type="password" placeholder="Password" />
+                      </div>
+                    </div>
+                    <div class="buttons">
+                      <button id="leadSignInBtn" class="button is-link is-light">Sign In</button>
+                      <button id="leadSignOutBtn" class="button is-danger is-light">Sign Out</button>
+                    </div>
+                    <p id="leadAuthMsg" class="has-text-danger has-text-weight-bold"></p>
+                  </div>
 
-          <div class="leader-row reverse">
-            <div class="leader-image">
-              <img src="/images/NAUREEN.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Naureen Kamal</div>
-              <div class="leader-title">Local Partnership Co-Director</div>
-              <p class="leader-bio">Hi!! My name is Naureen and I am a junior studying Genetics and Genomics with certificates in Health and Education Policy. Outside of GHA, I am an undergraduate researcher in the Bendlin Lab of the Alzheimer’s Disease Research Center and a CNA at the UW Health ICU. I am President of UW Advocates for Alzheimer’s and co-Professional Development chair for Islamic Stem. I am a student representative on the Dean of Students Advisory Board and CALS Equity and Diversity Committee. I also work as an undergraduate teaching fellow for high school and first year programs in CALS. Outside of school, I love hiking, scrapbooking, and baking! I hope to pursue a career in public health as a physician and advocating for equitable health policy.
-</p>
-            </div>
-          </div>
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/SARAH.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Shelby Kail</div>
-              <div class="leader-title">Forum Co-Director</div>
-              <p class="leader-bio">Hello! My name is Shelby and I’m a sophomore studying Microbiology with certificates in Global Health. Outside of GHA, I enjoy reading and spending quality time with my friends! In the future, I hope to attend medical school and keep a strong focus on global health issues</p>
-            </div>
-          </div>
+                  <!-- Profile create/update form (visible to owner or admins) -->
+                  <form id="leaderForm" class="mb-5 is-hidden">
+                    <input type="hidden" id="leaderId" />
+                    <div class="columns">
+                      <div class="column">
+                        <label class="label">Full name</label>
+                        <input id="leaderName" class="input" required />
+                      </div>
+                      <div class="column">
+                        <label class="label">Title</label>
+                        <input id="leaderTitle" class="input" required />
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label class="label">Image URL (public)</label>
+                      <input id="leaderImage" class="input" placeholder="/images/NAME.png" />
+                    </div>
+                    <div class="field">
+                      <label class="label">Bio</label>
+                      <textarea id="leaderBio" class="textarea" rows="4"></textarea>
+                    </div>
+                    <div class="buttons">
+                      <button class="button is-link" type="submit">Save</button>
+                      <button class="button" id="leadResetBtn" type="button">Reset</button>
+                    </div>
+                    <p id="leadFormMsg" class="has-text-weight-bold"></p>
+                  </form>
 
-          <div class="leader-row reverse">
-            <div class="leader-image">
-              <img src="/images/ANYA.png" alt="Leader name" style="object-position: center 10%;" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Anya Mullen</div>
-              <div class="leader-title">Forum Co-Director</div>
-              <p class="leader-bio">I’m a sophomore studying Health Promotion & Health Equity, with certificates in Health Policy and Global Health. After graduation, I hope to work in the field of Public Health, particularly in the area of program planning and evaluation. Alongside being a part of GHA, I also work as a small group tutor for Biology 101 through GUTS, and do remote marketing and administrative work for a Pilates studio in my hometown. Outside of work and campus involvements, I love working out (especially lifting), cooking, and spending time with friends and family!
-
-</p>
-            </div>
-          </div>
-
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/AVA.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Ava Parsons</div>
-              <div class="leader-title">Campaigns Co-Director</div>
-              <p class="leader-bio">Hi! My name is Ava. I’m a junior studying Nursing with a certificate in Global Health. Currently I work at UW hospital as an NA. Outside of GHA I enjoy doing anything outside and baking. After graduation, I hope to go into bedside nursing for a little, then continuing my education to become an NP!
-
-    
-              </p>
-            </div>
-          </div>
-
-          <div class="leader-row reverse">
-            <div class="leader-image">
-              <img src="/images/SYDNEY.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Sydney Weber</div>
-              <div class="leader-title">Campaigns Co-Director</div>
-              <p class="leader-bio">Hi, my name’s Sydney Weber and I’m a junior majoring in Global Health. I’m especially interested in healthcare administration and health equity and hope to go to graduate school after graduation. On campus, I’m a Student Research Assistant for the UW Health Department of Emergency Medicine and I also volunteer at SSM Health St. Mary’s Hospital in the ED.
-
-</p>
-            </div>
-          </div>
-
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/JESS.png" alt="Leader name" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Jess Rosu</div>
-              <div class="leader-title">Community Building Director</div>
-              <p class="leader-bio">Hi, my name is Jessica and I am a senior majoring in global health and microbiology! I am an undergraduate research assistant with the Mo Lab in the department of bacteriology. I am also a peer mentor for the microbiology department here at UW-Madison. Outside of school, I like to bake, snuggle with my cat, and watch movies. After graduation, I hope to get my MPH and later become a physician assistant.
-</p>
-            </div>
-          </div>
-
-          <div class="leader-row reverse">
-            <div class="leader-image">
-              <img src="/images/GABI.png" alt="Leader name" style="object-position: center 10%;" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Gabi Beaman</div>
-              <div class="leader-title">Finance Director</div>
-              <p class="leader-bio">Hi! My name is Gabi and I’m a senior studying Global Health with certificates in Health Policy and Leadership on the pre-Healthcare Administration track. Around campus, I’m involved as the Co-President for Crafting for Care, a Community Resource Navigator with the Center for Patient Partnerships, a Wisconsin Admissions Volunteer, and previously, an Undergraduate Researcher with the TinyEarth Lab.
-
-</p>
-            </div>
-          </div>
-          <div class="leader-row">
-            <div class="leader-image">
-              <img src="/images/PAIGE.png" alt="Leader name" style="object-position: center 10%;" />
-            </div>
-            <div class="leader-info">
-              <div class="leader-name">Paige Meyer</div>
-              <div class="leader-title">Communications Director </div>
-              <p class="leader-bio">Hello, global health lovers! My name is Paige, and I am a junior studying Global Health and Spanish with certificates in Chicanx/e and Latinx/e Studies & Health Policy! I am very interested in public health, and am exploring careers related to community education and immigrant health care access. In addition to GHA, I am also a Teaching Fellow for CP125: The Wisconsin Experience Seminar, and a volunteer with Madison International Partners</p>
+                  <!-- Admin-only list -->
+                  <div id="leadAdminList" class="is-hidden">
+                    <h4 class="title is-6">All Profiles</h4>
+                    <div id="allLeaders"></div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </div>
@@ -199,12 +133,286 @@
     <footer class="footer has-text-centered">
       <p>&copy; 2025 Global Health Alliance UW-Madison</p>
       <p>gha.uwmadison@gmail.com</p>
+
+      <a
+        href="https://www.instagram.com/ghauwmadison/"
+        target="_blank"
+        class="instagram-link-footer"
+      >
+        <svg
+          class="instagram-icon-footer"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
     </footer>
 
     <script>
       const r_e = (id) => document.querySelector(`#${id}`);
 
   // Sign in logic removed from Leadership page
+    </script>
+    <!-- Firebase / leadership management script -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot,
+        doc,
+        getDoc,
+        setDoc,
+        addDoc,
+        deleteDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
+        authDomain: "is-424-global-health-alliance.firebaseapp.com",
+        projectId: "is-424-global-health-alliance",
+        storageBucket: "is-424-global-health-alliance.firebasestorage.app",
+        messagingSenderId: "174606565995",
+        appId: "1:174606565995:web:5f4a37ae7cfc023eb3a72e",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Elements
+      const leaderList = document.getElementById("leaderList");
+      const openLeadAdminModalBtn = document.getElementById("openLeadAdminModal");
+      const closeLeadAdminModalBtn = document.getElementById("closeLeadAdminModal");
+      const leadAdminModal = document.getElementById("leadAdminModal");
+      const leadModalBg = leadAdminModal && leadAdminModal.querySelector(".modal-background");
+
+      // auth UI
+      const leadEmail = document.getElementById("leadEmail");
+      const leadPassword = document.getElementById("leadPassword");
+      const leadSignInBtn = document.getElementById("leadSignInBtn");
+      const leadSignOutBtn = document.getElementById("leadSignOutBtn");
+      const leadAuthMsg = document.getElementById("leadAuthMsg");
+
+      // form / admin list
+      const leaderForm = document.getElementById("leaderForm");
+      const leaderIdEl = document.getElementById("leaderId");
+      const leaderNameEl = document.getElementById("leaderName");
+      const leaderTitleEl = document.getElementById("leaderTitle");
+      const leaderImageEl = document.getElementById("leaderImage");
+      const leaderBioEl = document.getElementById("leaderBio");
+      const leadFormMsg = document.getElementById("leadFormMsg");
+      const leadResetBtn = document.getElementById("leadResetBtn");
+      const leadAdminList = document.getElementById("leadAdminList");
+      const allLeaders = document.getElementById("allLeaders");
+
+      function openModal() { leadAdminModal.classList.add("is-active"); }
+      function closeModal() { leadAdminModal.classList.remove("is-active"); }
+      if (openLeadAdminModalBtn) openLeadAdminModalBtn.addEventListener("click", openModal);
+      if (closeLeadAdminModalBtn) closeLeadAdminModalBtn.addEventListener("click", closeModal);
+      if (leadModalBg) leadModalBg.addEventListener("click", closeModal);
+
+      async function isAdmin(uid) {
+        if (!uid) return false;
+        const snap = await getDoc(doc(db, "admins", uid));
+        return snap.exists();
+      }
+
+      // Public list of leaders (order by name)
+      const pubQ = query(collection(db, "leaders"), orderBy("name", "asc"));
+      onSnapshot(pubQ, (snap) => {
+        leaderList.innerHTML = "";
+        if (snap.empty) {
+          leaderList.innerHTML = "<p>No leaders configured.</p>";
+          return;
+        }
+        snap.forEach((s) => {
+          const ld = s.data();
+          const row = document.createElement("div");
+          row.className = "leader-row";
+          // optional image
+          const imgSrc = ld.image || "/images/placeholder.png";
+          row.innerHTML = `
+            <div class="leader-image">
+              <img src="${imgSrc}" alt="${ld.name || ''}" />
+            </div>
+            <div class="leader-info">
+              <div class="leader-name">${ld.name || ''}</div>
+              <div class="leader-title">${ld.title || ''}</div>
+              <p class="leader-bio">${ld.bio || ''}</p>
+            </div>
+          `;
+          leaderList.appendChild(row);
+        });
+      }, (err) => {
+        console.error('leaders pubQ error', err);
+        leaderList.innerHTML = '<p>Unable to load leadership profiles.</p>';
+      });
+
+      // Admin view: all leaders
+      const adminQ = query(collection(db, "leaders"), orderBy("name", "asc"));
+      onSnapshot(adminQ, (snap) => {
+        if (!allLeaders) return;
+        allLeaders.innerHTML = "";
+        snap.forEach((s) => {
+          const ld = s.data();
+          const div = document.createElement('div');
+          div.className = 'event-box';
+          div.innerHTML = `
+            <p class="has-text-weight-bold">${ld.name || '(no name)'}</p>
+            <p><strong>Title:</strong> ${ld.title || ''}</p>
+            <p>${ld.bio ? ld.bio.substring(0,300) + (ld.bio.length>300 ? '...' : '') : ''}</p>
+            <div class="buttons mt-2">
+              <button class="button is-small is-link" data-edit="${s.id}">Edit</button>
+              <button class="button is-small is-danger" data-del="${s.id}">Delete</button>
+            </div>
+          `;
+          allLeaders.appendChild(div);
+        });
+
+        allLeaders.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => loadForEdit(btn.dataset.edit)));
+        allLeaders.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => doDelete(btn.dataset.del)));
+      }, (err) => {
+        console.error('admin leaders snapshot error', err);
+      });
+
+      // Sign in/out
+      leadSignInBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        leadAuthMsg.textContent = 'Signing in...';
+        try {
+          const email = leadEmail.value.trim();
+          const pass = leadPassword.value;
+          if (!email || !pass) { leadAuthMsg.textContent = 'Enter email and password'; return; }
+          await signInWithEmailAndPassword(auth, email, pass);
+          leadAuthMsg.textContent = 'Signed in';
+          leadEmail.value = '';
+          leadPassword.value = '';
+        } catch (err) {
+          console.error('lead sign in', err);
+          leadAuthMsg.textContent = `Sign in failed: ${err.code || err.message}`;
+        }
+      });
+
+      leadSignOutBtn.addEventListener('click', async () => {
+        try { await signOut(auth); leadAuthMsg.textContent = 'Signed out'; }
+        catch (e) { leadAuthMsg.textContent = 'Sign out failed'; }
+      });
+
+      // On auth changes: show form if admin, or if user has their own leader doc
+      onAuthStateChanged(auth, async (user) => {
+        const admin = await isAdmin(user?.uid);
+        if (admin) {
+          leaderForm.classList.remove('is-hidden');
+          leadAdminList.classList.remove('is-hidden');
+          leadAuthMsg.textContent = `Signed in as admin: ${user.email}`;
+        } else {
+          leadAdminList.classList.add('is-hidden');
+          // if user has a leader doc, allow edit of their own profile
+          if (user) {
+            const snap = await getDoc(doc(db, 'leaders', user.uid));
+            if (snap.exists()) {
+              leaderForm.classList.remove('is-hidden');
+              // load into form
+              const ld = snap.data();
+              leaderIdEl.value = snap.id;
+              leaderNameEl.value = ld.name || '';
+              leaderTitleEl.value = ld.title || '';
+              leaderImageEl.value = ld.image || '';
+              leaderBioEl.value = ld.bio || '';
+              leadAuthMsg.textContent = `Signed in as member: ${user.email} (you can edit your profile)`;
+            } else {
+              // show blank form so member can create their own
+              leaderForm.classList.remove('is-hidden');
+              leaderIdEl.value = user.uid; // use uid as target id for saves
+              leaderNameEl.value = '';
+              leaderTitleEl.value = '';
+              leaderImageEl.value = '';
+              leaderBioEl.value = '';
+              leadAuthMsg.textContent = `Signed in as member: ${user.email} (create or edit your profile)`;
+            }
+          } else {
+            leaderForm.classList.add('is-hidden');
+            leadAuthMsg.textContent = '';
+            leaderIdEl.value = '';
+          }
+        }
+      });
+
+      // Save leader profile
+      leaderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        leadFormMsg.textContent = '';
+        const id = leaderIdEl.value && leaderIdEl.value.trim();
+        const payload = {
+          name: leaderNameEl.value.trim(),
+          title: leaderTitleEl.value.trim(),
+          image: leaderImageEl.value.trim() || '',
+          bio: leaderBioEl.value.trim() || '',
+          updatedAt: serverTimestamp(),
+        };
+        if (!payload.name || !payload.title) { leadFormMsg.textContent = 'Please provide name and title'; return; }
+        try {
+          const user = auth.currentUser;
+          const admin = await isAdmin(user?.uid);
+          if (id) {
+            // ensure non-admins can only write to their own doc
+            if (!admin && user?.uid !== id) { leadFormMsg.textContent = 'Not authorized to edit that profile'; return; }
+            await setDoc(doc(db, 'leaders', id), { ...payload }, { merge: true });
+            leadFormMsg.textContent = 'Saved';
+            leaderIdEl.value = '';
+          } else {
+            // admin creating new without specifying id
+            if (!admin) { leadFormMsg.textContent = 'Not authorized to create other profiles'; return; }
+            await addDoc(collection(db, 'leaders'), { ...payload, createdAt: serverTimestamp() });
+            leadFormMsg.textContent = 'Created';
+          }
+        } catch (err) { console.error('save leader', err); leadFormMsg.textContent = 'Save failed'; }
+      });
+
+      leadResetBtn.addEventListener('click', () => {
+        leaderIdEl.value = '';
+        leaderNameEl.value = '';
+        leaderTitleEl.value = '';
+        leaderImageEl.value = '';
+        leaderBioEl.value = '';
+        leadFormMsg.textContent = '';
+      });
+
+      async function loadForEdit(id) {
+        const snap = await getDoc(doc(db,'leaders', id));
+        if (!snap.exists()) return;
+        const ld = snap.data();
+        leaderIdEl.value = snap.id;
+        leaderNameEl.value = ld.name || '';
+        leaderTitleEl.value = ld.title || '';
+        leaderImageEl.value = ld.image || '';
+        leaderBioEl.value = ld.bio || '';
+        leadFormMsg.textContent = 'Loaded for edit';
+        openModal();
+      }
+
+      async function doDelete(id) {
+        if (!confirm('Delete this profile?')) return;
+        try { await deleteDoc(doc(db, 'leaders', id)); }
+        catch (e) { console.error('delete leader', e); alert('Delete failed'); }
+      }
     </script>
   </body>
 </html>
