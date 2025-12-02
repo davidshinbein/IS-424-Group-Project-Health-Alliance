@@ -508,32 +508,35 @@
         }
 
         try {
-          if (id) {
-            // Update existing
+          if (id && id.length > 0) {
+            // Update existing profile
+            console.log("Updating existing profile:", id);
             await setDoc(doc(db, "leaders", id), payload, { merge: true });
-            leadFormMsg.textContent = "Updated";
+            leadFormMsg.textContent = "Profile updated successfully!";
             leadFormMsg.className =
               "has-text-success has-text-weight-bold mt-2";
           } else {
-            // Create new
-            await addDoc(collection(db, "leaders"), {
+            // Create new profile with auto-generated ID
+            console.log("Creating new profile");
+            const docRef = await addDoc(collection(db, "leaders"), {
               ...payload,
               createdAt: serverTimestamp(),
             });
-            leadFormMsg.textContent = "Created";
+            console.log("New profile created with ID:", docRef.id);
+            leadFormMsg.textContent = "Profile created successfully!";
             leadFormMsg.className =
               "has-text-success has-text-weight-bold mt-2";
           }
 
-          // Reset form
+          // Reset form after successful save
           leaderIdEl.value = "";
           leaderNameEl.value = "";
           leaderTitleEl.value = "";
           leaderImageEl.value = "";
           leaderBioEl.value = "";
         } catch (err) {
-          console.error(err);
-          leadFormMsg.textContent = "Save failed";
+          console.error("Save error:", err);
+          leadFormMsg.textContent = `Save failed: ${err.message}`;
           leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
         }
       });
