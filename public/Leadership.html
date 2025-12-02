@@ -47,6 +47,7 @@
         height: 200px;
         object-fit: cover;
         border-radius: 8px;
+        background-color: #eee;
       }
       .leader-info {
         flex: 1;
@@ -65,6 +66,38 @@
       .leader-bio {
         line-height: 1.6;
       }
+
+      /* Skeleton loading */
+      .skeleton-row {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .skeleton-box {
+        background: #e0e0e0;
+        border-radius: 8px;
+      }
+      .skeleton-img {
+        width: 200px;
+        height: 200px;
+      }
+      .skeleton-line {
+        height: 18px;
+        margin-bottom: 10px;
+        background: #e0e0e0;
+        border-radius: 4px;
+      }
+      .skeleton-line.short {
+        width: 120px;
+      }
+      .skeleton-line.medium {
+        width: 180px;
+      }
+      .skeleton-line.long {
+        width: 90%;
+      }
+
       .image-preview {
         max-width: 200px;
         max-height: 200px;
@@ -83,8 +116,8 @@
     </style>
     <base href="/" />
   </head>
+
   <body>
-    <!-- Header -->
     <header class="has-text-centered p-0">
       <figure class="image is-64x64 is-inline-block">
         <img src="/images/ghalogo.png" alt="logo" />
@@ -113,7 +146,6 @@
       </nav>
     </header>
 
-    <!-- Main -->
     <main class="section p-0">
       <section class="section">
         <div class="leadership-section">
@@ -121,12 +153,10 @@
             2025-2026 Leadership Team
           </h1>
 
-          <!-- Dynamic leader list -->
           <div id="leaderList">
-            <p class="has-text-centered">Loading leadership team...</p>
+            <!-- Skeleton loaders inserted here -->
           </div>
 
-          <!-- Admin controls -->
           <section class="mt-5 mb-4 has-text-centered">
             <button class="button is-link is-light" id="openLeadAdminModal">
               Admin Login
@@ -151,7 +181,6 @@
 
               <section class="modal-card-body">
                 <div id="leadAdminPanel" class="admin-panel mb-0">
-                  <!-- Auth block -->
                   <div id="leadAuthBlock" class="mb-4">
                     <div class="columns">
                       <div class="column is-half">
@@ -190,28 +219,17 @@
                     <p id="leadAuthMsg" class="has-text-weight-bold mt-2"></p>
                   </div>
 
-                  <!-- Profile create/update form (admins only) -->
                   <form id="leaderForm" class="mb-5 is-hidden">
                     <input type="hidden" id="leaderId" />
 
                     <div class="field">
                       <label class="label">Full Name *</label>
-                      <input
-                        id="leaderName"
-                        class="input"
-                        required
-                        placeholder="e.g., Tola Klabough"
-                      />
+                      <input id="leaderName" class="input" required />
                     </div>
 
                     <div class="field">
                       <label class="label">Position/Title *</label>
-                      <input
-                        id="leaderTitle"
-                        class="input"
-                        required
-                        placeholder="e.g., Co-President"
-                      />
+                      <input id="leaderTitle" class="input" required />
                     </div>
 
                     <div class="field">
@@ -221,8 +239,19 @@
                         class="textarea"
                         rows="6"
                         required
-                        placeholder="Tell us about yourself, your studies, involvement, and future goals..."
                       ></textarea>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Profile Photo *</label>
+                      <input
+                        id="leaderImageFile"
+                        type="file"
+                        accept="image/*"
+                        class="input"
+                      />
+                      <p id="fileName" class="file-name">No file selected</p>
+                      <img id="imagePreview" class="image-preview" />
                     </div>
 
                     <div class="buttons">
@@ -240,7 +269,6 @@
                     <p id="leadFormMsg" class="has-text-weight-bold mt-2"></p>
                   </form>
 
-                  <!-- Admin list -->
                   <div id="leadAdminList" class="is-hidden">
                     <h4 class="title is-6">All Profiles</h4>
                     <div id="allLeaders"></div>
@@ -253,13 +281,12 @@
       </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer has-text-centered">
       <p>&copy; 2025 Global Health Alliance UW-Madison</p>
       <p>gha.uwmadison@gmail.com</p>
     </footer>
 
-    <!-- Firebase integration -->
+    <!-- Firebase -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
       import {
@@ -302,7 +329,6 @@
       const db = getFirestore(app);
       const storage = getStorage(app);
 
-      // Elements
       const leaderList = document.getElementById("leaderList");
       const openLeadAdminModalBtn =
         document.getElementById("openLeadAdminModal");
@@ -312,28 +338,196 @@
       const leadAdminModal = document.getElementById("leadAdminModal");
       const leadModalBg = leadAdminModal?.querySelector(".modal-background");
 
-      const leadEmail = document.getElementById("leadEmail");
-      const leadPassword = document.getElementById("leadPassword");
-      const leadSignInBtn = document.getElementById("leadSignInBtn");
-      const leadSignOutBtn = document.getElementById("leadSignOutBtn");
-      const leadAuthMsg = document.getElementById("leadAuthMsg");
-
       const leaderForm = document.getElementById("leaderForm");
       const leaderIdEl = document.getElementById("leaderId");
       const leaderNameEl = document.getElementById("leaderName");
       const leaderTitleEl = document.getElementById("leaderTitle");
-      const leaderImageFileEl = document.getElementById("leaderImageFile");
       const leaderBioEl = document.getElementById("leaderBio");
+      const leaderImageFileEl = document.getElementById("leaderImageFile");
       const leadFormMsg = document.getElementById("leadFormMsg");
       const leadResetBtn = document.getElementById("leadResetBtn");
-      const leadAdminList = document.getElementById("leadAdminList");
       const allLeaders = document.getElementById("allLeaders");
       const imagePreview = document.getElementById("imagePreview");
       const fileName = document.getElementById("fileName");
       const saveBtn = document.getElementById("saveBtn");
       const saveBtnText = document.getElementById("saveBtnText");
 
-      // Image preview
+      const leadEmail = document.getElementById("leadEmail");
+      const leadPassword = document.getElementById("leadPassword");
+      const leadSignInBtn = document.getElementById("leadSignInBtn");
+      const leadSignOutBtn = document.getElementById("leadSignOutBtn");
+      const leadAuthMsg = document.getElementById("leadAuthMsg");
+      const leadAdminList = document.getElementById("leadAdminList");
+
+      function openModal() {
+        leadAdminModal.classList.add("is-active");
+      }
+      function closeModal() {
+        leadAdminModal.classList.remove("is-active");
+      }
+
+      openLeadAdminModalBtn?.addEventListener("click", openModal);
+      closeLeadAdminModalBtn?.addEventListener("click", closeModal);
+      leadModalBg?.addEventListener("click", closeModal);
+
+      function showSkeletons(count = 4) {
+        leaderList.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+          const skeleton = document.createElement("div");
+          skeleton.className = "skeleton-row";
+          skeleton.innerHTML = `
+            <div class="skeleton-img skeleton-box"></div>
+            <div class="leader-info">
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line long"></div>
+            </div>
+          `;
+          leaderList.appendChild(skeleton);
+        }
+      }
+
+      showSkeletons();
+
+      async function isAdmin(uid) {
+        if (!uid) return false;
+        try {
+          const snap = await getDoc(doc(db, "admins", uid));
+          return snap.exists();
+        } catch {
+          return false;
+        }
+      }
+
+      const pubQ = query(collection(db, "leaders"), orderBy("name", "asc"));
+
+      onSnapshot(
+        pubQ,
+        (snap) => {
+          showSkeletons(Math.max(snap.size, 4));
+
+          setTimeout(() => {
+            leaderList.innerHTML = "";
+
+            if (snap.empty) {
+              leaderList.innerHTML =
+                "<p class='has-text-centered'>No leadership profiles available yet.</p>";
+              return;
+            }
+
+            let isReverse = false;
+
+            snap.forEach((s) => {
+              const ld = s.data();
+              const row = document.createElement("div");
+              row.className = `leader-row ${isReverse ? "reverse" : ""}`;
+
+              const imgSrc = ld.imageUrl || "/images/placeholder.png";
+
+              row.innerHTML = `
+                <div class="leader-image">
+                  <img 
+                    src="${imgSrc}"
+                    loading="lazy"
+                    alt="${ld.name}"
+                    onerror="this.src='/images/placeholder.png'"
+                  />
+                </div>
+                <div class="leader-info">
+                  <div class="leader-name">${ld.name}</div>
+                  <div class="leader-title">${ld.title}</div>
+                  <p class="leader-bio">${ld.bio}</p>
+                </div>
+              `;
+
+              leaderList.appendChild(row);
+              isReverse = !isReverse;
+            });
+          }, 300);
+        },
+        () => {
+          leaderList.innerHTML =
+            "<p class='has-text-centered has-text-danger'>Unable to load profiles.</p>";
+        }
+      );
+
+      const adminQ = query(collection(db, "leaders"), orderBy("name", "asc"));
+      onSnapshot(adminQ, (snap) => {
+        allLeaders.innerHTML = "";
+        snap.forEach((s) => {
+          const ld = s.data();
+          const div = document.createElement("div");
+          div.className = "event-box";
+          div.innerHTML = `
+            <p class="has-text-weight-bold">${ld.name}</p>
+            <p><strong>Title:</strong> ${ld.title}</p>
+            <p class="mt-2">${ld.bio.substring(0, 150)}${
+            ld.bio.length > 150 ? "..." : ""
+          }</p>
+            <div class="buttons mt-2">
+              <button class="button is-small is-link" data-edit="${
+                s.id
+              }">Edit</button>
+              <button class="button is-small is-danger" data-del="${
+                s.id
+              }">Delete</button>
+            </div>
+          `;
+          allLeaders.appendChild(div);
+        });
+
+        allLeaders
+          .querySelectorAll("[data-edit]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => loadForEdit(btn.dataset.edit))
+          );
+        allLeaders
+          .querySelectorAll("[data-del]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => doDelete(btn.dataset.del))
+          );
+      });
+
+      leadSignInBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        leadAuthMsg.textContent = "Signing in...";
+        leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
+
+        try {
+          await signInWithEmailAndPassword(
+            auth,
+            leadEmail.value,
+            leadPassword.value
+          );
+          leadAuthMsg.className = "has-text-success has-text-weight-bold mt-2";
+          leadAuthMsg.textContent = "Signed in";
+        } catch (err) {
+          leadAuthMsg.textContent = `Sign in failed`;
+          leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
+        }
+      });
+
+      leadSignOutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          leadAuthMsg.textContent = "Signed out";
+          leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
+        } catch {
+          leadAuthMsg.textContent = "Sign out failed";
+        }
+      });
+
+      onAuthStateChanged(auth, async (user) => {
+        const admin = await isAdmin(user?.uid);
+        if (admin) {
+          leaderForm.classList.remove("is-hidden");
+          leadAdminList.classList.remove("is-hidden");
+        } else {
+          leaderForm.classList.add("is-hidden");
+          leadAdminList.classList.add("is-hidden");
+        }
+      });
+
       leaderImageFileEl.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -350,238 +544,45 @@
         }
       });
 
-      // Modal controls
-      function openModal() {
-        leadAdminModal.classList.add("is-active");
-      }
-      function closeModal() {
-        leadAdminModal.classList.remove("is-active");
-      }
-
-      openLeadAdminModalBtn?.addEventListener("click", openModal);
-      closeLeadAdminModalBtn?.addEventListener("click", closeModal);
-      leadModalBg?.addEventListener("click", closeModal);
-
-      // Check if user is admin
-      async function isAdmin(uid) {
-        if (!uid) return false;
-        try {
-          const snap = await getDoc(doc(db, "admins", uid));
-          return snap.exists();
-        } catch (err) {
-          console.error("Error checking admin status:", err);
-          return false;
-        }
-      }
-
-      // Public list of leaders
-      const pubQ = query(collection(db, "leaders"), orderBy("name", "asc"));
-      onSnapshot(
-        pubQ,
-        (snap) => {
-          leaderList.innerHTML = "";
-          if (snap.empty) {
-            leaderList.innerHTML =
-              "<p class='has-text-centered'>No leadership profiles available yet.</p>";
-            return;
-          }
-
-          let isReverse = false;
-          snap.forEach((s) => {
-            const ld = s.data();
-            const row = document.createElement("div");
-            row.className = `leader-row ${isReverse ? "reverse" : ""}`;
-            const imgSrc = ld.imageUrl || "/images/placeholder.png";
-
-            row.innerHTML = `
-              <div class="leader-image">
-                <img src="${imgSrc}" alt="${
-              ld.name || "Leader"
-            }" onerror="this.src='/images/placeholder.png'" />
-              </div>
-              <div class="leader-info">
-                <div class="leader-name">${ld.name || "Name not provided"}</div>
-                <div class="leader-title">${
-                  ld.title || "Title not provided"
-                }</div>
-                <p class="leader-bio">${ld.bio || ""}</p>
-              </div>
-            `;
-            leaderList.appendChild(row);
-            isReverse = !isReverse;
-          });
-        },
-        (err) => {
-          console.error("Error loading leaders:", err);
-          leaderList.innerHTML =
-            "<p class='has-text-centered has-text-danger'>Unable to load leadership profiles.</p>";
-        }
-      );
-
-      // Admin view: all leaders
-      const adminQ = query(collection(db, "leaders"), orderBy("name", "asc"));
-      onSnapshot(
-        adminQ,
-        (snap) => {
-          if (!allLeaders) return;
-          allLeaders.innerHTML = "";
-
-          snap.forEach((s) => {
-            const ld = s.data();
-            const div = document.createElement("div");
-            div.className = "event-box";
-            div.innerHTML = `
-              <p class="has-text-weight-bold">${ld.name || "(no name)"}</p>
-              <p><strong>Title:</strong> ${ld.title || "N/A"}</p>
-              ${
-                ld.bio
-                  ? `<p class="mt-2">${ld.bio.substring(0, 150)}${
-                      ld.bio.length > 150 ? "..." : ""
-                    }</p>`
-                  : ""
-              }
-              <div class="buttons mt-2">
-                <button class="button is-small is-link" data-edit="${
-                  s.id
-                }">Edit</button>
-                <button class="button is-small is-danger" data-del="${
-                  s.id
-                }">Delete</button>
-              </div>
-            `;
-            allLeaders.appendChild(div);
-          });
-
-          allLeaders
-            .querySelectorAll("[data-edit]")
-            .forEach((btn) =>
-              btn.addEventListener("click", () => loadForEdit(btn.dataset.edit))
-            );
-          allLeaders
-            .querySelectorAll("[data-del]")
-            .forEach((btn) =>
-              btn.addEventListener("click", () => doDelete(btn.dataset.del))
-            );
-        },
-        (err) => {
-          console.error("Error loading admin list:", err);
-        }
-      );
-
-      // Sign in
-      leadSignInBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        leadAuthMsg.textContent = "Signing in...";
-        leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
-
-        try {
-          const email = leadEmail.value.trim();
-          const pass = leadPassword.value;
-
-          if (!email || !pass) {
-            leadAuthMsg.textContent = "Enter email and password";
-            leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
-            return;
-          }
-
-          await signInWithEmailAndPassword(auth, email, pass);
-          leadAuthMsg.className = "has-text-success has-text-weight-bold mt-2";
-          leadAuthMsg.textContent = "Signed in";
-          leadEmail.value = "";
-          leadPassword.value = "";
-        } catch (err) {
-          console.error("Sign in error:", err);
-          leadAuthMsg.textContent = `Sign in failed: ${
-            err.code || err.message
-          }`;
-          leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
-        }
-      });
-
-      // Sign out
-      leadSignOutBtn.addEventListener("click", async () => {
-        try {
-          await signOut(auth);
-          leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
-          leadAuthMsg.textContent = "Signed out";
-          leadEmail.value = "";
-          leadPassword.value = "";
-        } catch (e) {
-          console.error("Sign out error:", e);
-          leadAuthMsg.textContent = `Sign out failed`;
-          leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
-        }
-      });
-
-      // Auth state changes
-      onAuthStateChanged(auth, async (user) => {
-        const admin = await isAdmin(user?.uid);
-        if (admin) {
-          leaderForm.classList.remove("is-hidden");
-          leadAdminList.classList.remove("is-hidden");
-          leadAuthMsg.textContent = `Signed in as admin: ${user.email}`;
-          leadAuthMsg.className = "has-text-success has-text-weight-bold mt-2";
-        } else {
-          leaderForm.classList.add("is-hidden");
-          leadAdminList.classList.add("is-hidden");
-          if (user) {
-            leadAuthMsg.textContent = "Not authorized for admin actions";
-            leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
-          } else {
-            leadAuthMsg.textContent = "";
-          }
-        }
-      });
-
-      // Save profile with image upload
       leaderForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        leadFormMsg.textContent = "";
 
         const name = leaderNameEl.value.trim();
         const title = leaderTitleEl.value.trim();
         const bio = leaderBioEl.value.trim();
         const imageFile = leaderImageFileEl.files[0];
-        const existingId = leaderIdEl.value?.trim();
+        const existingId = leaderIdEl.value;
 
         if (!name || !title || !bio) {
-          leadFormMsg.textContent = "Please fill in name, title, and bio";
+          leadFormMsg.textContent = "Please fill all fields.";
           leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
           return;
         }
 
-        // Disable button and show loading
         saveBtn.disabled = true;
         saveBtnText.textContent = "Saving...";
 
         try {
           let imageUrl = "";
 
-          // Upload image if provided
           if (imageFile) {
-            saveBtnText.textContent = "Uploading photo...";
-            const timestamp = Date.now();
-            const imagePath = `leaders/${timestamp}_${imageFile.name}`;
+            const imagePath = `leaders/${Date.now()}_${imageFile.name}`;
             const imageRef = ref(storage, imagePath);
             await uploadBytes(imageRef, imageFile);
             imageUrl = await getDownloadURL(imageRef);
           } else if (existingId) {
-            // If editing and no new image, keep existing image
             const existingDoc = await getDoc(doc(db, "leaders", existingId));
             if (existingDoc.exists()) {
               imageUrl = existingDoc.data().imageUrl || "";
             }
           }
 
-          if (!imageUrl && !existingId) {
-            leadFormMsg.textContent = "Please upload a photo";
+          if (!imageUrl) {
+            leadFormMsg.textContent = "Please upload a photo.";
             leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
             saveBtn.disabled = false;
-            saveBtnText.textContent = "Save Profile";
             return;
           }
-
-          saveBtnText.textContent = "Saving profile...";
 
           const payload = {
             name,
@@ -591,24 +592,21 @@
             updatedAt: serverTimestamp(),
           };
 
-          if (existingId && existingId.length > 0) {
-            // Update existing profile
+          if (existingId) {
             await setDoc(doc(db, "leaders", existingId), payload, {
               merge: true,
             });
             leadFormMsg.textContent = "Profile updated successfully!";
           } else {
-            // Create new profile
             await addDoc(collection(db, "leaders"), {
               ...payload,
               createdAt: serverTimestamp(),
             });
-            leadFormMsg.textContent = "Profile created successfully!";
+            leadFormMsg.textContent = "Profile created!";
           }
 
           leadFormMsg.className = "has-text-success has-text-weight-bold mt-2";
 
-          // Reset form
           leaderIdEl.value = "";
           leaderNameEl.value = "";
           leaderTitleEl.value = "";
@@ -617,16 +615,13 @@
           fileName.textContent = "No file selected";
           imagePreview.classList.remove("show");
         } catch (err) {
-          console.error("Save error:", err);
-          leadFormMsg.textContent = `Save failed: ${err.message}`;
-          leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
-        } finally {
-          saveBtn.disabled = false;
-          saveBtnText.textContent = "Save Profile";
+          leadFormMsg.textContent = `Error: ${err.message}`;
         }
+
+        saveBtn.disabled = false;
+        saveBtnText.textContent = "Save Profile";
       });
 
-      // Reset form
       leadResetBtn.addEventListener("click", () => {
         leaderIdEl.value = "";
         leaderNameEl.value = "";
@@ -638,41 +633,30 @@
         leadFormMsg.textContent = "";
       });
 
-      // Load for edit
       async function loadForEdit(id) {
         const snap = await getDoc(doc(db, "leaders", id));
         if (!snap.exists()) return;
+
         const ld = snap.data();
         leaderIdEl.value = snap.id;
-        leaderNameEl.value = ld.name || "";
-        leaderTitleEl.value = ld.title || "";
-        leaderBioEl.value = ld.bio || "";
+        leaderNameEl.value = ld.name;
+        leaderTitleEl.value = ld.title;
+        leaderBioEl.value = ld.bio;
 
-        // Show existing image preview
         if (ld.imageUrl) {
           imagePreview.src = ld.imageUrl;
           imagePreview.classList.add("show");
           fileName.textContent = "Current image (upload new to replace)";
         }
 
-        leadFormMsg.textContent =
-          "Loaded for edit - you can upload a new photo or keep the existing one";
-        leadFormMsg.className = "has-text-info has-text-weight-bold mt-2";
         openModal();
-        leaderForm.scrollIntoView({ behavior: "smooth" });
       }
 
-      // Delete
       async function doDelete(id) {
-        if (!confirm("Delete this profile? This cannot be undone.")) return;
-        try {
-          await deleteDoc(doc(db, "leaders", id));
-          leadFormMsg.textContent = "Profile deleted";
-          leadFormMsg.className = "has-text-success has-text-weight-bold mt-2";
-        } catch (e) {
-          console.error("Delete error:", e);
-          alert("Delete failed: " + e.message);
-        }
+        if (!confirm("Delete this profile?")) return;
+        await deleteDoc(doc(db, "leaders", id));
+        leaderFormMsg.textContent = "Profile deleted.";
+        leaderFormMsg.className = "has-text-success has-text-weight-bold mt-2";
       }
     </script>
   </body>
