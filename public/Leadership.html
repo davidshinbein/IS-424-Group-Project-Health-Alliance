@@ -9,6 +9,7 @@
     />
     <link rel="stylesheet" href="/styles/header.css" />
     <link rel="stylesheet" href="/styles/leadership.css" />
+
     <style>
       .event-box {
         border: 1px solid #ddd;
@@ -17,6 +18,7 @@
         margin-bottom: 14px;
         background: #fff;
       }
+
       .admin-panel {
         border: 2px solid #192d86;
         border-radius: 12px;
@@ -26,61 +28,35 @@
         margin: 0 auto 1.5rem;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
       }
+
       .modal-card {
         max-width: 900px;
         width: 100%;
       }
-      .is-hidden {
-        display: none !important;
-      }
+
       .leader-row {
-        display: flex;
-        align-items: center;
         margin-bottom: 2rem;
-        gap: 2rem;
       }
-      .leader-row.reverse {
-        flex-direction: row-reverse;
-      }
-      .leader-image img {
-        width: 200px;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        background-color: #eee;
-      }
-      .leader-info {
-        flex: 1;
-      }
+
       .leader-name {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: bold;
-        margin-bottom: 0.5rem;
       }
+
       .leader-title {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         color: #192d86;
         font-weight: 600;
         margin-bottom: 1rem;
       }
+
       .leader-bio {
         line-height: 1.6;
       }
 
-      /* Skeleton loading */
+      /* Skeleton loaders */
       .skeleton-row {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
-      .skeleton-box {
-        background: #e0e0e0;
-        border-radius: 8px;
-      }
-      .skeleton-img {
-        width: 200px;
-        height: 200px;
+        margin-bottom: 1.4rem;
       }
       .skeleton-line {
         height: 18px;
@@ -88,32 +64,17 @@
         background: #e0e0e0;
         border-radius: 4px;
       }
-      .skeleton-line.short {
-        width: 120px;
+      .short {
+        width: 140px;
       }
-      .skeleton-line.medium {
-        width: 180px;
+      .medium {
+        width: 200px;
       }
-      .skeleton-line.long {
+      .long {
         width: 90%;
       }
-
-      .image-preview {
-        max-width: 200px;
-        max-height: 200px;
-        margin-top: 10px;
-        border-radius: 8px;
-        display: none;
-      }
-      .image-preview.show {
-        display: block;
-      }
-      .file-name {
-        margin-top: 8px;
-        font-size: 0.9rem;
-        color: #666;
-      }
     </style>
+
     <base href="/" />
   </head>
 
@@ -137,7 +98,7 @@
             >Calendar</a
           >
           <a class="navbar-item has-text-white" href="get-involved.html"
-            >Get Involved & Member Requirements</a
+            >Get Involved</a
           >
           <a class="navbar-item has-text-white" href="globalpartners.html"
             >Global Partners</a
@@ -148,134 +109,109 @@
 
     <main class="section p-0">
       <section class="section">
-        <div class="leadership-section">
-          <h1 class="title has-text-centered mb-6">
-            2025-2026 Leadership Team
-          </h1>
+        <h1 class="title has-text-centered mb-6">2025–2026 Leadership Team</h1>
 
-          <div id="leaderList">
-            <!-- Skeleton loaders inserted here -->
-          </div>
+        <div id="leaderList"></div>
 
-          <section class="mt-5 mb-4 has-text-centered">
-            <button class="button is-link is-light" id="openLeadAdminModal">
-              Admin Login
-            </button>
-            <p class="is-size-7 has-text-grey mt-2">
-              For Global Health Alliance exec/admin use only.
-            </p>
-          </section>
+        <section class="mt-5 mb-4 has-text-centered">
+          <button class="button is-link is-light" id="openLeadAdminModal">
+            Admin Login
+          </button>
+          <p class="is-size-7 has-text-grey mt-2">
+            For Global Health Alliance exec/admin use only.
+          </p>
+        </section>
 
-          <!-- Admin Modal -->
-          <div id="leadAdminModal" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-              <header class="modal-card-head">
-                <p class="modal-card-title">Admin Panel</p>
-                <button
-                  class="delete"
-                  aria-label="close"
-                  id="closeLeadAdminModal"
-                ></button>
-              </header>
+        <!-- Admin Modal -->
+        <div id="leadAdminModal" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Admin Panel</p>
+              <button
+                class="delete"
+                aria-label="close"
+                id="closeLeadAdminModal"
+              ></button>
+            </header>
 
-              <section class="modal-card-body">
-                <div id="leadAdminPanel" class="admin-panel mb-0">
-                  <div id="leadAuthBlock" class="mb-4">
-                    <div class="columns">
-                      <div class="column is-half">
-                        <label class="label">Admin Email</label>
-                        <input
-                          id="leadEmail"
-                          class="input"
-                          type="email"
-                          placeholder="admin@example.com"
-                        />
-                      </div>
-                      <div class="column is-half">
-                        <label class="label">Password</label>
-                        <input
-                          id="leadPassword"
-                          class="input"
-                          type="password"
-                          placeholder="Password"
-                        />
-                      </div>
+            <section class="modal-card-body">
+              <div class="admin-panel">
+                <!-- Admin Auth -->
+                <div id="leadAuthBlock" class="mb-4">
+                  <div class="columns">
+                    <div class="column is-half">
+                      <label class="label">Admin Email</label>
+                      <input id="leadEmail" class="input" type="email" />
                     </div>
-                    <div class="buttons">
-                      <button
-                        id="leadSignInBtn"
-                        class="button is-link is-light"
-                      >
-                        Sign In
-                      </button>
-                      <button
-                        id="leadSignOutBtn"
-                        class="button is-danger is-light"
-                      >
-                        Sign Out
-                      </button>
+                    <div class="column is-half">
+                      <label class="label">Password</label>
+                      <input id="leadPassword" class="input" type="password" />
                     </div>
-                    <p id="leadAuthMsg" class="has-text-weight-bold mt-2"></p>
                   </div>
 
-                  <form id="leaderForm" class="mb-5 is-hidden">
-                    <input type="hidden" id="leaderId" />
-
-                    <div class="field">
-                      <label class="label">Full Name *</label>
-                      <input id="leaderName" class="input" required />
-                    </div>
-
-                    <div class="field">
-                      <label class="label">Position/Title *</label>
-                      <input id="leaderTitle" class="input" required />
-                    </div>
-
-                    <div class="field">
-                      <label class="label">Bio *</label>
-                      <textarea
-                        id="leaderBio"
-                        class="textarea"
-                        rows="6"
-                        required
-                      ></textarea>
-                    </div>
-
-                    <div class="field">
-                      <label class="label">Profile Photo *</label>
-                      <input
-                        id="leaderImageFile"
-                        type="file"
-                        accept="image/*"
-                        class="input"
-                      />
-                      <p id="fileName" class="file-name">No file selected</p>
-                      <img id="imagePreview" class="image-preview" />
-                    </div>
-
-                    <div class="buttons">
-                      <button class="button is-link" type="submit" id="saveBtn">
-                        <span id="saveBtnText">Save Profile</span>
-                      </button>
-                      <button
-                        class="button is-light"
-                        id="leadResetBtn"
-                        type="button"
-                      >
-                        Clear Form
-                      </button>
-                    </div>
-                    <p id="leadFormMsg" class="has-text-weight-bold mt-2"></p>
-                  </form>
-
-                  <div id="leadAdminList" class="is-hidden">
-                    <h4 class="title is-6">All Profiles</h4>
-                    <div id="allLeaders"></div>
+                  <div class="buttons">
+                    <button id="leadSignInBtn" class="button is-link is-light">
+                      Sign In
+                    </button>
+                    <button
+                      id="leadSignOutBtn"
+                      class="button is-danger is-light"
+                    >
+                      Sign Out
+                    </button>
                   </div>
+
+                  <p id="leadAuthMsg" class="has-text-weight-bold mt-2"></p>
                 </div>
-              </section>
-            </div>
+
+                <!-- Leader Form -->
+                <form id="leaderForm" class="is-hidden">
+                  <input type="hidden" id="leaderId" />
+
+                  <div class="field">
+                    <label class="label">Full Name *</label>
+                    <input id="leaderName" class="input" required />
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Position/Title *</label>
+                    <input id="leaderTitle" class="input" required />
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Bio *</label>
+                    <textarea
+                      id="leaderBio"
+                      class="textarea"
+                      rows="5"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div class="buttons">
+                    <button class="button is-link" type="submit" id="saveBtn">
+                      <span id="saveBtnText">Save Profile</span>
+                    </button>
+                    <button
+                      class="button is-light"
+                      id="leadResetBtn"
+                      type="button"
+                    >
+                      Clear Form
+                    </button>
+                  </div>
+
+                  <p id="leadFormMsg" class="has-text-weight-bold mt-2"></p>
+                </form>
+
+                <!-- Admin List -->
+                <div id="leadAdminList" class="is-hidden">
+                  <h4 class="title is-6">All Profiles</h4>
+                  <div id="allLeaders"></div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </section>
@@ -286,7 +222,7 @@
       <p>gha.uwmadison@gmail.com</p>
     </footer>
 
-    <!-- Firebase -->
+    <!-- Firebase Script -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
       import {
@@ -308,12 +244,6 @@
         deleteDoc,
         serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-      import {
-        getStorage,
-        ref,
-        uploadBytes,
-        getDownloadURL,
-      } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
@@ -325,201 +255,152 @@
       };
 
       const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const storage = getStorage(app);
+      const auth = getAuth();
+      const db = getFirestore();
 
+      // Elements
       const leaderList = document.getElementById("leaderList");
+      const leaderForm = document.getElementById("leaderForm");
+      const leadAdminList = document.getElementById("leadAdminList");
+      const leadAuthMsg = document.getElementById("leadAuthMsg");
+
+      const leaderIdEl = document.getElementById("leaderId");
+      const leaderNameEl = document.getElementById("leaderName");
+      const leaderTitleEl = document.getElementById("leaderTitle");
+      const leaderBioEl = document.getElementById("leaderBio");
+      const leadFormMsg = document.getElementById("leadFormMsg");
+
+      const allLeaders = document.getElementById("allLeaders");
+
+      // Modal
       const openLeadAdminModalBtn =
         document.getElementById("openLeadAdminModal");
       const closeLeadAdminModalBtn = document.getElementById(
         "closeLeadAdminModal"
       );
       const leadAdminModal = document.getElementById("leadAdminModal");
-      const leadModalBg = leadAdminModal?.querySelector(".modal-background");
 
-      const leaderForm = document.getElementById("leaderForm");
-      const leaderIdEl = document.getElementById("leaderId");
-      const leaderNameEl = document.getElementById("leaderName");
-      const leaderTitleEl = document.getElementById("leaderTitle");
-      const leaderBioEl = document.getElementById("leaderBio");
-      const leaderImageFileEl = document.getElementById("leaderImageFile");
-      const leadFormMsg = document.getElementById("leadFormMsg");
-      const leadResetBtn = document.getElementById("leadResetBtn");
-      const allLeaders = document.getElementById("allLeaders");
-      const imagePreview = document.getElementById("imagePreview");
-      const fileName = document.getElementById("fileName");
-      const saveBtn = document.getElementById("saveBtn");
-      const saveBtnText = document.getElementById("saveBtnText");
-
-      const leadEmail = document.getElementById("leadEmail");
-      const leadPassword = document.getElementById("leadPassword");
-      const leadSignInBtn = document.getElementById("leadSignInBtn");
-      const leadSignOutBtn = document.getElementById("leadSignOutBtn");
-      const leadAuthMsg = document.getElementById("leadAuthMsg");
-      const leadAdminList = document.getElementById("leadAdminList");
-
-      function openModal() {
+      openLeadAdminModalBtn.addEventListener("click", () => {
         leadAdminModal.classList.add("is-active");
-      }
-      function closeModal() {
+      });
+      closeLeadAdminModalBtn.addEventListener("click", () => {
         leadAdminModal.classList.remove("is-active");
-      }
+      });
 
-      openLeadAdminModalBtn?.addEventListener("click", openModal);
-      closeLeadAdminModalBtn?.addEventListener("click", closeModal);
-      leadModalBg?.addEventListener("click", closeModal);
-
+      // Skeleton loading
       function showSkeletons(count = 4) {
         leaderList.innerHTML = "";
         for (let i = 0; i < count; i++) {
-          const skeleton = document.createElement("div");
-          skeleton.className = "skeleton-row";
-          skeleton.innerHTML = `
-            <div class="skeleton-img skeleton-box"></div>
-            <div class="leader-info">
+          leaderList.innerHTML += `
+            <div class="skeleton-row">
               <div class="skeleton-line medium"></div>
               <div class="skeleton-line short"></div>
               <div class="skeleton-line long"></div>
             </div>
           `;
-          leaderList.appendChild(skeleton);
         }
       }
 
       showSkeletons();
 
+      // Admin check
       async function isAdmin(uid) {
         if (!uid) return false;
-        try {
-          const snap = await getDoc(doc(db, "admins", uid));
-          return snap.exists();
-        } catch {
-          return false;
-        }
+        const snap = await getDoc(doc(db, "admins", uid));
+        return snap.exists();
       }
 
+      // Public listener
       const pubQ = query(collection(db, "leaders"), orderBy("name", "asc"));
 
-      onSnapshot(
-        pubQ,
-        (snap) => {
-          showSkeletons(Math.max(snap.size, 4));
+      onSnapshot(pubQ, (snap) => {
+        showSkeletons(Math.max(snap.size, 4));
 
-          setTimeout(() => {
-            leaderList.innerHTML = "";
+        setTimeout(() => {
+          leaderList.innerHTML = "";
 
-            if (snap.empty) {
-              leaderList.innerHTML =
-                "<p class='has-text-centered'>No leadership profiles available yet.</p>";
-              return;
-            }
+          if (snap.empty) {
+            leaderList.innerHTML =
+              "<p class='has-text-centered'>No profiles yet.</p>";
+            return;
+          }
 
-            let isReverse = false;
+          snap.forEach((s) => {
+            const ld = s.data();
+            leaderList.innerHTML += `
+              <div class="leader-row">
+                <div class="leader-name">${ld.name}</div>
+                <div class="leader-title">${ld.title}</div>
+                <p class="leader-bio">${ld.bio}</p>
+              </div>
+            `;
+          });
+        }, 250);
+      });
 
-            snap.forEach((s) => {
-              const ld = s.data();
-              const row = document.createElement("div");
-              row.className = `leader-row ${isReverse ? "reverse" : ""}`;
-
-              const imgSrc = ld.imageUrl || "/images/placeholder.png";
-
-              row.innerHTML = `
-                <div class="leader-image">
-                  <img 
-                    src="${imgSrc}"
-                    loading="lazy"
-                    alt="${ld.name}"
-                    onerror="this.src='/images/placeholder.png'"
-                  />
-                </div>
-                <div class="leader-info">
-                  <div class="leader-name">${ld.name}</div>
-                  <div class="leader-title">${ld.title}</div>
-                  <p class="leader-bio">${ld.bio}</p>
-                </div>
-              `;
-
-              leaderList.appendChild(row);
-              isReverse = !isReverse;
-            });
-          }, 300);
-        },
-        () => {
-          leaderList.innerHTML =
-            "<p class='has-text-centered has-text-danger'>Unable to load profiles.</p>";
-        }
-      );
-
-      const adminQ = query(collection(db, "leaders"), orderBy("name", "asc"));
-      onSnapshot(adminQ, (snap) => {
+      // Admin list
+      onSnapshot(query(collection(db, "leaders"), orderBy("name")), (snap) => {
         allLeaders.innerHTML = "";
         snap.forEach((s) => {
           const ld = s.data();
-          const div = document.createElement("div");
-          div.className = "event-box";
-          div.innerHTML = `
-            <p class="has-text-weight-bold">${ld.name}</p>
-            <p><strong>Title:</strong> ${ld.title}</p>
-            <p class="mt-2">${ld.bio.substring(0, 150)}${
+          allLeaders.innerHTML += `
+            <div class="event-box">
+              <p class="has-text-weight-bold">${ld.name}</p>
+              <p><strong>Title:</strong> ${ld.title}</p>
+              <p class="mt-2">${ld.bio.substring(0, 150)}${
             ld.bio.length > 150 ? "..." : ""
           }</p>
-            <div class="buttons mt-2">
-              <button class="button is-small is-link" data-edit="${
-                s.id
-              }">Edit</button>
-              <button class="button is-small is-danger" data-del="${
-                s.id
-              }">Delete</button>
+              <div class="buttons mt-2">
+                <button class="button is-small is-link" data-edit="${
+                  s.id
+                }">Edit</button>
+                <button class="button is-small is-danger" data-del="${
+                  s.id
+                }">Delete</button>
+              </div>
             </div>
           `;
-          allLeaders.appendChild(div);
         });
 
-        allLeaders
+        document
           .querySelectorAll("[data-edit]")
           .forEach((btn) =>
             btn.addEventListener("click", () => loadForEdit(btn.dataset.edit))
           );
-        allLeaders
+        document
           .querySelectorAll("[data-del]")
           .forEach((btn) =>
             btn.addEventListener("click", () => doDelete(btn.dataset.del))
           );
       });
 
-      leadSignInBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        leadAuthMsg.textContent = "Signing in...";
-        leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
+      // Auth
+      document
+        .getElementById("leadSignInBtn")
+        .addEventListener("click", async () => {
+          try {
+            await signInWithEmailAndPassword(
+              auth,
+              document.getElementById("leadEmail").value,
+              document.getElementById("leadPassword").value
+            );
+            leadAuthMsg.textContent = "Signed in.";
+            leadAuthMsg.className = "has-text-success";
+          } catch {
+            leadAuthMsg.textContent = "Auth failed.";
+            leadAuthMsg.className = "has-text-danger";
+          }
+        });
 
-        try {
-          await signInWithEmailAndPassword(
-            auth,
-            leadEmail.value,
-            leadPassword.value
-          );
-          leadAuthMsg.className = "has-text-success has-text-weight-bold mt-2";
-          leadAuthMsg.textContent = "Signed in";
-        } catch (err) {
-          leadAuthMsg.textContent = `Sign in failed`;
-          leadAuthMsg.className = "has-text-danger has-text-weight-bold mt-2";
-        }
-      });
-
-      leadSignOutBtn.addEventListener("click", async () => {
-        try {
+      document
+        .getElementById("leadSignOutBtn")
+        .addEventListener("click", async () => {
           await signOut(auth);
-          leadAuthMsg.textContent = "Signed out";
-          leadAuthMsg.className = "has-text-info has-text-weight-bold mt-2";
-        } catch {
-          leadAuthMsg.textContent = "Sign out failed";
-        }
-      });
+          leadAuthMsg.textContent = "Signed out.";
+        });
 
       onAuthStateChanged(auth, async (user) => {
-        const admin = await isAdmin(user?.uid);
-        if (admin) {
+        if (await isAdmin(user?.uid)) {
           leaderForm.classList.remove("is-hidden");
           leadAdminList.classList.remove("is-hidden");
         } else {
@@ -528,88 +409,34 @@
         }
       });
 
-      leaderImageFileEl.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          fileName.textContent = file.name;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            imagePreview.src = e.target.result;
-            imagePreview.classList.add("show");
-          };
-          reader.readAsDataURL(file);
-        } else {
-          fileName.textContent = "No file selected";
-          imagePreview.classList.remove("show");
-        }
-      });
-
+      // Save leader
       leaderForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const name = leaderNameEl.value.trim();
         const title = leaderTitleEl.value.trim();
         const bio = leaderBioEl.value.trim();
-        const imageFile = leaderImageFileEl.files[0];
         const existingId = leaderIdEl.value;
 
         if (!name || !title || !bio) {
           leadFormMsg.textContent = "Please fill all fields.";
-          leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
+          leadFormMsg.className = "has-text-danger";
           return;
         }
 
-        saveBtn.disabled = true;
-        saveBtnText.textContent = "Saving...";
+        const payload = {
+          name,
+          title,
+          bio,
+          updatedAt: serverTimestamp(),
+        };
 
         try {
-          let imageUrl = "";
-
-          if (imageFile) {
-            saveBtnText.textContent = "Uploading photo...";
-            const timestamp = Date.now();
-            const imagePath = `leaders/${timestamp}_${imageFile.name}`;
-            const imageRef = ref(storage, imagePath);
-
-            // 🚀 REQUIRED FIX — include metadata for Firebase v10 (prevents CORS errors)
-            await uploadBytes(imageRef, imageFile, {
-              contentType: imageFile.type || "image/jpeg",
-            });
-
-            imageUrl = await getDownloadURL(imageRef);
-          } else if (existingId) {
-            // Keep old image if editing
-            const existingDoc = await getDoc(doc(db, "leaders", existingId));
-            if (existingDoc.exists()) {
-              imageUrl = existingDoc.data().imageUrl || "";
-            }
-          } else if (existingId) {
-            const existingDoc = await getDoc(doc(db, "leaders", existingId));
-            if (existingDoc.exists()) {
-              imageUrl = existingDoc.data().imageUrl || "";
-            }
-          }
-
-          if (!imageUrl) {
-            leadFormMsg.textContent = "Please upload a photo.";
-            leadFormMsg.className = "has-text-danger has-text-weight-bold mt-2";
-            saveBtn.disabled = false;
-            return;
-          }
-
-          const payload = {
-            name,
-            title,
-            bio,
-            imageUrl,
-            updatedAt: serverTimestamp(),
-          };
-
           if (existingId) {
             await setDoc(doc(db, "leaders", existingId), payload, {
               merge: true,
             });
-            leadFormMsg.textContent = "Profile updated successfully!";
+            leadFormMsg.textContent = "Profile updated!";
           } else {
             await addDoc(collection(db, "leaders"), {
               ...payload,
@@ -617,35 +444,16 @@
             });
             leadFormMsg.textContent = "Profile created!";
           }
-
-          leadFormMsg.className = "has-text-success has-text-weight-bold mt-2";
+          leadFormMsg.className = "has-text-success";
 
           leaderIdEl.value = "";
-          leaderNameEl.value = "";
-          leaderTitleEl.value = "";
-          leaderBioEl.value = "";
-          leaderImageFileEl.value = "";
-          fileName.textContent = "No file selected";
-          imagePreview.classList.remove("show");
+          leaderForm.reset();
         } catch (err) {
-          leadFormMsg.textContent = `Error: ${err.message}`;
+          leadFormMsg.textContent = err.message;
         }
-
-        saveBtn.disabled = false;
-        saveBtnText.textContent = "Save Profile";
       });
 
-      leadResetBtn.addEventListener("click", () => {
-        leaderIdEl.value = "";
-        leaderNameEl.value = "";
-        leaderTitleEl.value = "";
-        leaderBioEl.value = "";
-        leaderImageFileEl.value = "";
-        fileName.textContent = "No file selected";
-        imagePreview.classList.remove("show");
-        leadFormMsg.textContent = "";
-      });
-
+      // Edit
       async function loadForEdit(id) {
         const snap = await getDoc(doc(db, "leaders", id));
         if (!snap.exists()) return;
@@ -656,21 +464,22 @@
         leaderTitleEl.value = ld.title;
         leaderBioEl.value = ld.bio;
 
-        if (ld.imageUrl) {
-          imagePreview.src = ld.imageUrl;
-          imagePreview.classList.add("show");
-          fileName.textContent = "Current image (upload new to replace)";
-        }
-
-        openModal();
+        leadAuthMsg.textContent = "Editing leader...";
+        openLeadAdminModalBtn.click();
       }
 
+      // Delete
       async function doDelete(id) {
         if (!confirm("Delete this profile?")) return;
         await deleteDoc(doc(db, "leaders", id));
-        leaderFormMsg.textContent = "Profile deleted.";
-        leaderFormMsg.className = "has-text-success has-text-weight-bold mt-2";
       }
+
+      // Reset
+      document.getElementById("leadResetBtn").addEventListener("click", () => {
+        leaderIdEl.value = "";
+        leaderForm.reset();
+        leadFormMsg.textContent = "";
+      });
     </script>
   </body>
 </html>
