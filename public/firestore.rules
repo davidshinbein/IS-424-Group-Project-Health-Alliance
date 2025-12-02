@@ -1,21 +1,25 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to read events for the public calendar.
+    
+    // Events: public read, only admins can write
     match /events/{eventId} {
       allow read: if true;
-      // writes should be restricted to authenticated users in production
-      allow write: if false;
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // Admins collection: allow reads by authenticated users and writes only by that user
+    // Admins collection: authenticated users can read their own, only they can write their own
     match /admins/{adminId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == adminId;
     }
 
-    // Leaders collection: public read, writes allowed by the owner (uid == doc id) or by admins
+    // Leaders collection: public read, authenticated writes
+    // Users can write to their own profile (where doc ID = their UID)
+    // OR if they're listed as an admin
     match /leaders/{leaderId} {
       allow read: if true;
       allow write: if request.auth != null && (
