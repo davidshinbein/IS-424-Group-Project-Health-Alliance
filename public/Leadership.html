@@ -566,10 +566,23 @@
           let imageUrl = "";
 
           if (imageFile) {
-            const imagePath = `leaders/${Date.now()}_${imageFile.name}`;
+            saveBtnText.textContent = "Uploading photo...";
+            const timestamp = Date.now();
+            const imagePath = `leaders/${timestamp}_${imageFile.name}`;
             const imageRef = ref(storage, imagePath);
-            await uploadBytes(imageRef, imageFile);
+
+            // 🚀 REQUIRED FIX — include metadata for Firebase v10 (prevents CORS errors)
+            await uploadBytes(imageRef, imageFile, {
+              contentType: imageFile.type || "image/jpeg",
+            });
+
             imageUrl = await getDownloadURL(imageRef);
+          } else if (existingId) {
+            // Keep old image if editing
+            const existingDoc = await getDoc(doc(db, "leaders", existingId));
+            if (existingDoc.exists()) {
+              imageUrl = existingDoc.data().imageUrl || "";
+            }
           } else if (existingId) {
             const existingDoc = await getDoc(doc(db, "leaders", existingId));
             if (existingDoc.exists()) {
