@@ -363,23 +363,15 @@ document.addEventListener("click", (e) => {
 
 // Making connect with us form interact with firebase
 
-// Firebase init
-const firebaseConfig = {
-  apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
-  authDomain: "is-424-global-health-alliance.firebaseapp.com",
-  projectId: "is-424-global-health-alliance",
-  storageBucket: "is-424-global-health-alliance.firebasestorage.app",
-  messagingSenderId: "174606565995",
-  appId: "1:174606565995:web:5f4a37ae7cfc023eb3a72e",
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-
-// Contact form logic
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("contactForm");
+
+  // If the form isn't on this page, stop here
+  if (!form) {
+    console.warn("contactForm not found — skipping contact form setup.");
+    return;
+  }
+
   const nameInput = document.getElementById("contactName");
   const emailInput = document.getElementById("contactEmail");
   const messageInput = document.getElementById("contactMessage");
@@ -387,14 +379,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetBtn = document.getElementById("contactReset");
   const feedback = document.getElementById("contactFeedback");
 
-  // If this page doesn't have the form, don't crash
-  if (!form) {
-    console.warn("contactForm not found on this page.");
-    return;
-  }
-
   form.addEventListener("submit", function (e) {
-    e.preventDefault(); // 👈 stops the "JSON prepared" file download
+    e.preventDefault();
 
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
@@ -412,23 +398,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     db.collection("contactMessages")
       .add({
-        name: name,
-        email: email,
-        message: message,
+        name,
+        email,
+        message,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      .then(function () {
+      .then(() => {
         feedback.textContent = "Thank you! Your message has been sent.";
         feedback.style.color = "green";
         form.reset();
       })
-      .catch(function (error) {
-        console.error("Error saving contact message: ", error);
+      .catch((error) => {
+        console.error("Error saving message:", error);
         feedback.textContent =
-          "Sorry, something went wrong. Please try again later.";
+          "Error: unable to send message. Please try again later.";
         feedback.style.color = "red";
       })
-      .finally(function () {
+      .finally(() => {
         submitBtn.disabled = false;
       });
   });
