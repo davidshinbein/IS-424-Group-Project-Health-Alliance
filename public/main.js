@@ -360,3 +360,32 @@ document.addEventListener("click", (e) => {
     /* ignore */
   }
 });
+
+// Making connect with us form interact with firebase
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("contactForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("contactName").value.trim();
+    const email = document.getElementById("contactEmail").value.trim();
+    const message = document.getElementById("contactMessage").value.trim();
+
+    try {
+      await db.collection("contactMessages").add({
+        name,
+        email,
+        message,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      alert("Message sent!");
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      alert("Error sending message.");
+    }
+  });
+});
