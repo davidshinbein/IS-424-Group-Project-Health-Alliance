@@ -363,29 +363,79 @@ document.addEventListener("click", (e) => {
 
 // Making connect with us form interact with firebase
 
-document.addEventListener("DOMContentLoaded", () => {
+// Firebase init
+const firebaseConfig = {
+  apiKey: "AIzaSyA7LwW6tkidme79K4hztoGFI-uf90JR4Kk",
+  authDomain: "is-424-global-health-alliance.firebaseapp.com",
+  projectId: "is-424-global-health-alliance",
+  storageBucket: "is-424-global-health-alliance.firebasestorage.app",
+  messagingSenderId: "174606565995",
+  appId: "1:174606565995:web:5f4a37ae7cfc023eb3a72e",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
+// Contact form logic
+document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("contactForm");
+  const nameInput = document.getElementById("contactName");
+  const emailInput = document.getElementById("contactEmail");
+  const messageInput = document.getElementById("contactMessage");
+  const submitBtn = document.getElementById("contactSubmit");
+  const resetBtn = document.getElementById("contactReset");
+  const feedback = document.getElementById("contactFeedback");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // If this page doesn't have the form, don't crash
+  if (!form) {
+    console.warn("contactForm not found on this page.");
+    return;
+  }
 
-    const name = document.getElementById("contactName").value.trim();
-    const email = document.getElementById("contactEmail").value.trim();
-    const message = document.getElementById("contactMessage").value.trim();
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); // 👈 stops the "JSON prepared" file download
 
-    try {
-      await db.collection("contactMessages").add({
-        name,
-        email,
-        message,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
 
-      alert("Message sent!");
-      form.reset();
-    } catch (err) {
-      console.error(err);
-      alert("Error sending message.");
+    if (!name || !email || !message) {
+      feedback.textContent = "Please fill out all fields before submitting.";
+      feedback.style.color = "red";
+      return;
     }
+
+    submitBtn.disabled = true;
+    feedback.textContent = "Sending...";
+    feedback.style.color = "black";
+
+    db.collection("contactMessages")
+      .add({
+        name: name,
+        email: email,
+        message: message,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then(function () {
+        feedback.textContent = "Thank you! Your message has been sent.";
+        feedback.style.color = "green";
+        form.reset();
+      })
+      .catch(function (error) {
+        console.error("Error saving contact message: ", error);
+        feedback.textContent =
+          "Sorry, something went wrong. Please try again later.";
+        feedback.style.color = "red";
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+      });
+  });
+
+  resetBtn.addEventListener("click", function () {
+    form.reset();
+    feedback.textContent = "";
   });
 });
+
