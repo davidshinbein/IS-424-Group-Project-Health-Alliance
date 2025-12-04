@@ -162,17 +162,28 @@
       </div>
     </main>
 
-    <footer
-      class="footer has-text-centered"
-      style="
-        background-color: #192d86;
-        border-top: 5px solid black;
-        color: #fff;
-        padding: 20px;
-      "
-    >
+    <footer class="footer has-text-centered">
       <p>&copy; 2025 Global Health Alliance UW-Madison</p>
       <p>gha.uwmadison@gmail.com</p>
+      <style>
+        .instagram-link-footer {
+          display: inline-block;
+          line-height: 0;
+          margin: 0 5px;
+        }
+
+        .instagram-icon-footer {
+          width: 30px;
+          height: 30px;
+          color: #c13584;
+          transition: color 0.3s ease;
+        }
+
+        .instagram-link-footer:hover .instagram-icon-footer {
+          color: #f77737;
+        }
+      </style>
+
       <a
         href="https://www.instagram.com/ghauwmadison/"
         target="_blank"
@@ -247,15 +258,13 @@
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
-              feedback.textContent =
-                "Thank you! Your message has been sent.";
+              feedback.textContent = "Thank you! Your message has been sent.";
               feedback.style.color = "green";
               form.reset();
             })
             .catch((error) => {
               console.error("Error saving message:", error);
-              feedback.textContent =
-                "Error sending message. Please try again.";
+              feedback.textContent = "Error sending message. Please try again.";
               feedback.style.color = "red";
             })
             .finally(() => {
