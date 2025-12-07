@@ -34,5 +34,5 @@ async function go() {
 // call the function
 go();
 
-// run with ' node puppeteer.js ' in terminal
+// run with ' node david_puppeteer.js ' in terminal
 // cd "/Users/user/IS 424/IS-424-Group-Project-Health-Alliance"
