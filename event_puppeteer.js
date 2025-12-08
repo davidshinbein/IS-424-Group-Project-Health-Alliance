@@ -35,7 +35,7 @@ async function go() {
   await page.type("#title", "Test Event via Puppeteer");
 
   // Set date/time - format: YYYY-MM-DDTHH:MM
-  await page.type("#startAt", "2025-12-15T18:00");
+  await page.$eval("#startAt", (el) => (el.value = "2026-01-01T00:00"));
 
   await page.type("#location", "Memorial Union");
 
