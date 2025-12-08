@@ -41,7 +41,7 @@ async function go() {
 
   await page.type(
     "#description",
-    "This is a test event created automatically using Puppeteer."
+    "This is a test event created using Puppeteer for our class demonstration."
   );
 
   // published checkbox should already be checked by default, but you can toggle it:
