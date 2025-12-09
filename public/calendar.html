@@ -165,7 +165,10 @@
                     <button id="signInBtn" class="button is-link is-light">
                       Sign In
                     </button>
-                    <button id="signOutBtn" class="button is-danger is-light">
+                    <button
+                      id="signOutBtn"
+                      class="button is-danger is-light is-hidden"
+                    >
                       Sign Out
                     </button>
                   </div>
@@ -336,6 +339,8 @@
       const resetBtn = document.getElementById("resetBtn");
       const publicEvents = document.getElementById("publicEvents");
       const adminEvents = document.getElementById("adminEvents");
+      const authBlock = document.getElementById("authBlock");
+
       // Modal elements
       const adminModal = document.getElementById("adminModal");
       const openAdminModalBtn = document.getElementById("openAdminModal");
@@ -431,16 +436,39 @@
       });
 
       onAuthStateChanged(auth, async (user) => {
-        const admin = await isAdmin(user?.uid);
+        if (!user) {
+          // --- Signed OUT ---
+          signInBtn.classList.remove("is-hidden"); // show Sign In
+          signOutBtn.classList.add("is-hidden"); // hide Sign Out
+          authBlock.classList.remove("is-hidden"); // show login box
+
+          eventForm.classList.add("is-hidden"); // hide admin UI
+          adminList.classList.add("is-hidden");
+
+          authMsg.textContent = "";
+          authMsg.classList.remove("has-text-success", "has-text-danger");
+          return;
+        }
+
+        // --- Signed IN ---
+        signInBtn.classList.add("is-hidden"); // hide Sign In
+        signOutBtn.classList.remove("is-hidden"); // show Sign Out
+        authBlock.classList.add("is-hidden"); // hide login box
+
+        const admin = await isAdmin(user.uid);
+
         if (admin) {
-          eventForm.classList.remove("is-hidden");
+          eventForm.classList.remove("is-hidden"); // show admin UI
           adminList.classList.remove("is-hidden");
           authMsg.textContent = `Signed in as admin: ${user.email}`;
+          authMsg.classList.remove("has-text-danger");
+          authMsg.classList.add("has-text-success");
         } else {
           eventForm.classList.add("is-hidden");
           adminList.classList.add("is-hidden");
-          if (user) authMsg.textContent = "Not authorized for admin actions";
-          else authMsg.textContent = "";
+          authMsg.textContent = "Not authorized for admin actions";
+          authMsg.classList.remove("has-text-success");
+          authMsg.classList.add("has-text-danger");
         }
       });
 
