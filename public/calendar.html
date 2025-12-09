@@ -336,7 +336,6 @@
       const resetBtn = document.getElementById("resetBtn");
       const publicEvents = document.getElementById("publicEvents");
       const adminEvents = document.getElementById("adminEvents");
-      const authBlock = document.getElementById("authBlock");
 
       // Modal elements
       const adminModal = document.getElementById("adminModal");
@@ -433,11 +432,12 @@
       });
 
       onAuthStateChanged(auth, async (user) => {
+        console.log("[auth] state changed:", user ? user.uid : "signed out");
+
         if (!user) {
           // --- Signed OUT ---
-          signInBtn.classList.remove("is-hidden"); // show Sign In
-          signOutBtn.classList.add("is-hidden"); // hide Sign Out
-          authBlock.classList.remove("is-hidden"); // show login box
+          if (signInBtn) signInBtn.classList.remove("is-hidden"); // show Sign In
+          if (signOutBtn) signOutBtn.classList.add("is-hidden"); // hide Sign Out
 
           eventForm.classList.add("is-hidden"); // hide admin UI
           adminList.classList.add("is-hidden");
@@ -447,15 +447,15 @@
           return;
         }
 
-        // --- Signed IN ---
-        signInBtn.classList.add("is-hidden"); // hide Sign In
-        signOutBtn.classList.remove("is-hidden"); // show Sign Out
-        authBlock.classList.add("is-hidden"); // hide login box
+        // --- Signed IN (regardless of admin) ---
+        if (signInBtn) signInBtn.classList.add("is-hidden"); // hide Sign In
+        if (signOutBtn) signOutBtn.classList.remove("is-hidden"); // show Sign Out
 
         const admin = await isAdmin(user.uid);
+        console.log("[auth] isAdmin?", admin);
 
         if (admin) {
-          eventForm.classList.remove("is-hidden"); // show admin UI
+          eventForm.classList.remove("is-hidden");
           adminList.classList.remove("is-hidden");
           authMsg.textContent = `Signed in as admin: ${user.email}`;
           authMsg.classList.remove("has-text-danger");
